@@ -1,0 +1,18 @@
+# ROS 2 Build Caches
+project/ros2_ws/build/
+project/ros2_ws/install/
+project/ros2_ws/log/
+
+# Next.js & Node Caches
+project/frontend/node_modules/
+project/frontend/.next/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# External Repositories (too large to upload directly, should be handled via git submodules or excluded)
+# Jika Anda ingin mengunggahnya utuh (tidak disarankan), hapus 2 baris di bawah ini.
+# Namun sangat disarankan menggunakan Git Submodule untuk modul external ini.
+external/PX4-Autopilot/
+external/Micro-XRCE-DDS-Agent/

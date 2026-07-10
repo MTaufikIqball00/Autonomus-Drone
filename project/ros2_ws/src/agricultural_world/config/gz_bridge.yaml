@@ -1,0 +1,141 @@
+# ============================================================
+# gz_bridge.yaml
+# ros_gz_bridge topic mapping — Agricultural Drone Monitoring
+# Gazebo Harmony (Ionic) <-> ROS2 Jazzy
+#
+# Format setiap entry:
+#   ros_topic_name : <ros_topic>
+#   gz_topic_name  : <gz_topic>
+#   ros_type_name  : <ros_msg_type>
+#   gz_type_name   : <gz_msg_type>
+#   direction      : BIDIRECTIONAL | GZ_TO_ROS | ROS_TO_GZ
+# ============================================================
+
+# ── IMU ───────────────────────────────────────────────────────
+- ros_topic_name: /drone/imu
+  gz_topic_name:  /model/iris/link/base_link/sensor/imu_sensor/imu
+  ros_type_name:  sensor_msgs/msg/Imu
+  gz_type_name:   gz.msgs.IMU
+  direction:      GZ_TO_ROS
+
+# ── Magnetometer ──────────────────────────────────────────────
+- ros_topic_name: /drone/magnetometer
+  gz_topic_name:  /model/iris/link/base_link/sensor/magnetometer_sensor/magnetometer
+  ros_type_name:  sensor_msgs/msg/MagneticField
+  gz_type_name:   gz.msgs.Magnetometer
+  direction:      GZ_TO_ROS
+
+# ── GPS / NavSat ──────────────────────────────────────────────
+- ros_topic_name: /drone/gps
+  gz_topic_name:  /model/iris/link/base_link/sensor/navsat_sensor/navsat
+  ros_type_name:  sensor_msgs/msg/NavSatFix
+  gz_type_name:   gz.msgs.NavSat
+  direction:      GZ_TO_ROS
+
+# ── Barometer / Altitude ──────────────────────────────────────
+- ros_topic_name: /drone/altimeter
+  gz_topic_name:  /model/iris/link/base_link/sensor/air_pressure_sensor/air_pressure
+  ros_type_name:  sensor_msgs/msg/FluidPressure
+  gz_type_name:   gz.msgs.FluidPressure
+  direction:      GZ_TO_ROS
+
+# ── LiDAR (downward-facing altimeter) ────────────────────────
+- ros_topic_name: /drone/lidar/scan
+  gz_topic_name:  /model/iris/link/base_link/sensor/lidar_down/scan
+  ros_type_name:  sensor_msgs/msg/LaserScan
+  gz_type_name:   gz.msgs.LaserScan
+  direction:      GZ_TO_ROS
+
+# ── LiDAR PointCloud2 ────────────────────────────────────────
+- ros_topic_name: /drone/lidar/points
+  gz_topic_name:  /model/iris/link/base_link/sensor/lidar_down/scan/points
+  ros_type_name:  sensor_msgs/msg/PointCloud2
+  gz_type_name:   gz.msgs.PointCloudPacked
+  direction:      GZ_TO_ROS
+
+# ── Kamera RGB (monitoring tanaman) ──────────────────────────
+- ros_topic_name: /drone/camera/image_raw
+  gz_topic_name:  /model/iris/link/base_link/sensor/camera/image
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   gz.msgs.Image
+  direction:      GZ_TO_ROS
+
+- ros_topic_name: /drone/camera/camera_info
+  gz_topic_name:  /model/iris/link/base_link/sensor/camera/camera_info
+  ros_type_name:  sensor_msgs/msg/CameraInfo
+  gz_type_name:   gz.msgs.CameraInfo
+  direction:      GZ_TO_ROS
+
+# ── Kamera Depth (opsional, untuk obstacle avoidance) ────────
+- ros_topic_name: /drone/depth_camera/image_raw
+  gz_topic_name:  /model/iris/link/base_link/sensor/depth_camera/image
+  ros_type_name:  sensor_msgs/msg/Image
+  gz_type_name:   gz.msgs.Image
+  direction:      GZ_TO_ROS
+
+- ros_topic_name: /drone/depth_camera/points
+  gz_topic_name:  /model/iris/link/base_link/sensor/depth_camera/points
+  ros_type_name:  sensor_msgs/msg/PointCloud2
+  gz_type_name:   gz.msgs.PointCloudPacked
+  direction:      GZ_TO_ROS
+
+# ── Odometry ──────────────────────────────────────────────────
+- ros_topic_name: /drone/odom
+  gz_topic_name:  /model/iris/odometry
+  ros_type_name:  nav_msgs/msg/Odometry
+  gz_type_name:   gz.msgs.Odometry
+  direction:      GZ_TO_ROS
+
+- ros_topic_name: /drone/odom_with_covariance
+  gz_topic_name:  /model/iris/odometry_with_covariance
+  ros_type_name:  nav_msgs/msg/Odometry
+  gz_type_name:   gz.msgs.OdometryWithCovariance
+  direction:      GZ_TO_ROS
+
+# ── Pose (ground truth) ───────────────────────────────────────
+- ros_topic_name: /drone/pose
+  gz_topic_name:  /model/iris/pose
+  ros_type_name:  geometry_msgs/msg/PoseStamped
+  gz_type_name:   gz.msgs.Pose
+  direction:      GZ_TO_ROS
+
+# ── TF ────────────────────────────────────────────────────────
+- ros_topic_name: /tf
+  gz_topic_name:  /model/iris/pose_static
+  ros_type_name:  tf2_msgs/msg/TFMessage
+  gz_type_name:   gz.msgs.Pose_V
+  direction:      GZ_TO_ROS
+
+- ros_topic_name: /tf_static
+  gz_topic_name:  /world/agricultural_field/pose/info
+  ros_type_name:  tf2_msgs/msg/TFMessage
+  gz_type_name:   gz.msgs.Pose_V
+  direction:      GZ_TO_ROS
+
+# ── Clock ─────────────────────────────────────────────────────
+- ros_topic_name: /clock
+  gz_topic_name:  /clock
+  ros_type_name:  rosgraph_msgs/msg/Clock
+  gz_type_name:   gz.msgs.Clock
+  direction:      GZ_TO_ROS
+
+# ── Command velocity (ground control → drone) ─────────────────
+- ros_topic_name: /drone/cmd_vel
+  gz_topic_name:  /model/iris/cmd_vel
+  ros_type_name:  geometry_msgs/msg/Twist
+  gz_type_name:   gz.msgs.Twist
+  direction:      ROS_TO_GZ
+
+# ── Actuator / motor command ──────────────────────────────────
+- ros_topic_name: /drone/actuators
+  gz_topic_name:  /model/iris/command/motor_speed
+  ros_type_name:  actuator_msgs/msg/Actuators
+  gz_type_name:   gz.msgs.Actuators
+  direction:      ROS_TO_GZ
+
+# ── Joint states ─────────────────────────────────────────────
+- ros_topic_name: /drone/joint_states
+  gz_topic_name:  /world/agricultural_field/model/iris/joint_state
+  ros_type_name:  sensor_msgs/msg/JointState
+  gz_type_name:   gz.msgs.Model
+  direction:      GZ_TO_ROS
