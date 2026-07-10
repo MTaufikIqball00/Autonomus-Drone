@@ -197,7 +197,7 @@ class DashboardBridgeNode(Node):
         self._auto_takeoff_pending = False
         self._auto_takeoff_time = 0.0
         self._last_lidar_replan = 0.0       
-        self._lidar_replan_cooldown = 1.0   
+        self._lidar_replan_cooldown = 0.5   
         self.survey_active = False
         
         self._survey_start_time = 0.0
@@ -358,37 +358,55 @@ class DashboardBridgeNode(Node):
         self.nearest_obstacle_m = min_range
         now = time.monotonic()
         
-        if (self.nearest_obstacle_m < 7.5 and self.mode == "auto" and (now - self._last_lidar_replan) > self._lidar_replan_cooldown):
-            if self.current_pose:
-                angle_absolute = self.current_pose.yaw + min_angle_rel
-                obs_x = self.current_pose.x + self.nearest_obstacle_m * math.cos(angle_absolute)
-                obs_y = self.current_pose.y + self.nearest_obstacle_m * math.sin(angle_absolute)
-                
-                hit_static_tree = False
-                for obs in self.obstacles:
-                    if obs.get("source") == "gazebo_sdf":
-                        dist_to_center = math.hypot(obs_x - float(obs["x"]), obs_y - float(obs["y"]))
-                        if dist_to_center <= (float(obs["radius"]) + 8.0):
-                            if not obs.get("active", False):
-                                obs["active"] = True  
-                                self._last_lidar_replan = now
-                                self.get_logger().warn(f"LiDAR: Mengaktifkan rintangan peta statis '{obs['id']}'! A* menghindari area tersebut.")
-                                self.replan_from_current("lidar_activated_static_tree")
-                            hit_static_tree = True
-                            break
-                
-                if not hit_static_tree:
-                    is_new = True
+        if (self.mode == "auto" and (now - self._last_lidar_replan) > self._lidar_replan_cooldown):
+            replanned = False
+            
+            for dist, angle_rel in valid_ranges:
+                if dist >= 15.0:
+                    continue
+                    
+                if self.current_pose:
+                    angle_absolute = self.current_pose.yaw + angle_rel
+                    hit_x = self.current_pose.x + dist * math.cos(angle_absolute)
+                    hit_y = self.current_pose.y + dist * math.sin(angle_absolute)
+                    
+                    hit_static_tree = False
+                    closest_obs = None
+                    min_dist = float('inf')
+                    
                     for obs in self.obstacles:
-                        if obs.get("source") == "lidar":
-                            if math.hypot(obs_x - float(obs["x"]), obs_y - float(obs["y"])) < 3.0:
-                                is_new = False
-                                break
-                    if is_new:
-                        self._last_lidar_replan = now
-                        self.obstacles.append({"id": f"dyn_lidar_{int(now)}", "kind": "tree", "x": obs_x, "y": obs_y, "radius": 2.5, "clearance": 2.0, "height": 10.0, "source": "lidar"})
-                        self.get_logger().warn(f"LiDAR: Obstacle BARU terdeteksi di {self.nearest_obstacle_m:.1f}m. Replanning!")
-                        self.replan_from_current("lidar_obstacle")
+                        if obs.get("source") == "gazebo_sdf":
+                            dist_to_center = math.hypot(hit_x - float(obs["x"]), hit_y - float(obs["y"]))
+                            if dist_to_center < min_dist:
+                                min_dist = dist_to_center
+                                closest_obs = obs
+                    
+                    if closest_obs and min_dist <= (float(closest_obs["radius"]) + 8.0):
+                        if not closest_obs.get("active", False):
+                            closest_obs["active"] = True  
+                            self.get_logger().warn(f"LiDAR: Mengaktifkan rintangan peta statis '{closest_obs['id']}'! A* menghindari area tersebut.")
+                            replanned = True
+                        hit_static_tree = True
+                    
+                    if not hit_static_tree:
+                        is_new = True
+                        for obs in self.obstacles:
+                            if obs.get("source") == "lidar":
+                                if math.hypot(hit_x - float(obs["x"]), hit_y - float(obs["y"])) < 4.0:
+                                    is_new = False
+                                    break
+                        if is_new:
+                            # Push the obstacle center 2.0m INTO the tree to cover the trunk properly
+                            obs_x = self.current_pose.x + (dist + 2.0) * math.cos(angle_absolute)
+                            obs_y = self.current_pose.y + (dist + 2.0) * math.sin(angle_absolute)
+                            
+                            self.obstacles.append({"id": f"dyn_lidar_{int(now * 1000)}_{int(dist)}", "kind": "tree", "x": obs_x, "y": obs_y, "radius": 2.5, "clearance": 2.0, "height": 10.0, "source": "lidar"})
+                            self.get_logger().warn(f"LiDAR: Obstacle BARU terdeteksi di {dist:.1f}m. Menambahkan ke A*!")
+                            replanned = True
+                            
+            if replanned:
+                self._last_lidar_replan = now
+                self.replan_from_current("lidar_obstacle")
 
     def set_current_pose(self, pose: Pose2D) -> None:
         self._last_pose_time = time.monotonic()
