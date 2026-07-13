@@ -27,6 +27,7 @@ export default function ControlPanel({
   const [keys, setKeys] = useState({});
   const [gamepadName, setGamepadName] = useState("");
   const activeKeysRef = useRef({});
+  const activeIntervalRef = useRef(null);
 
   const battery = state?.battery || {};
   const vehicle = state?.vehicle || {};
@@ -54,10 +55,13 @@ export default function ControlPanel({
     const up = (event) => setKey(event, false);
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
-    return () => {
-      window.removeEventListener("keydown", down);
-      window.removeEventListener("keyup", up);
-    };
+      return () => {
+        window.removeEventListener("keydown", down);
+        window.removeEventListener("keyup", up);
+        if (activeIntervalRef.current) {
+          clearInterval(activeIntervalRef.current);
+        }
+      };
   }, []);
 
   useEffect(() => {
@@ -121,7 +125,18 @@ export default function ControlPanel({
   }
 
   function press(x = 0, y = 0, yaw = 0, z = 0) {
+    if (activeIntervalRef.current) {
+      clearInterval(activeIntervalRef.current);
+      activeIntervalRef.current = null;
+    }
     publishVelocity(x, y, yaw, z);
+    
+    // Repeat manual control publishing every 100ms if at least one component is active
+    if (x || y || yaw || z) {
+      activeIntervalRef.current = setInterval(() => {
+        publishVelocity(x, y, yaw, z);
+      }, 100);
+    }
   }
 
   const disabled = !connected || Boolean(busy);
@@ -162,18 +177,7 @@ export default function ControlPanel({
           </button>
         </div>
         
-        {/* --- ORBIT MISSION --- */}
-        <div className="button-row" style={{ marginTop: 6 }}>
-          <button
-            className="btn full"
-            style={{ background: "#10b981", color: "#fff", fontWeight: 700 }}
-            disabled={disabled}
-            onClick={() => runService("/start_orbit_mission")}
-          >
-            🌴 Start Orbit Mission (360°)
-          </button>
-        </div>
-        {/* ------------------------------------- */}
+
 
         <div className="button-row" style={{ marginTop: 6 }}>
           <button className="btn danger full" disabled={disabled} onClick={() => runService("/emergency_stop")}>

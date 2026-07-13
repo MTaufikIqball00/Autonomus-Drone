@@ -4009,24 +4009,7 @@
       <pose>0 0 0 0 0 0</pose>
     </include>
 
-    <model name="spawn_marker">
-      <static>true</static>
-      <pose>-65 0 0.3 0 0 0</pose>
-      <link name="link">
-        <visual name="v">
-          <geometry>
-            <cylinder>
-              <radius>0.2</radius>
-              <length>0.02</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <ambient>0.95 0.85 0.10 1</ambient>
-            <diffuse>0.95 0.85 0.10 1</diffuse>
-          </material>
-        </visual>
-      </link>
-    </model>
+
 
   </world>
 </sdf>

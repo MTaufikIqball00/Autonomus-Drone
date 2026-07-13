@@ -137,20 +137,22 @@ class DashboardBridgeNode(Node):
         self.wind_abort_threshold = float(self.get_parameter("wind_abort_threshold").value)
         self.setpoint_period = 1.0 / max(2.0, float(self.get_parameter("offboard_setpoint_rate").value))
 
-        # 1 Palm Tree at Center from the newly uploaded agricultural_field.sdf
+        # 3 Palm Trees from agricultural_field.sdf
         self.obstacles = [
-            {"id": "pohon_tengah_obstacle", "kind": "tree", "x": 0.0, "y": 0.0, "radius": 4.0, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
+            {"id": "pohon_sawit_01", "kind": "tree", "x": -40.0, "y": 0.0, "radius": 4.0, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
+            {"id": "pohon_sawit_02", "kind": "tree", "x": -20.0, "y": 0.0, "radius": 4.0, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
+            {"id": "pohon_sawit_03", "kind": "tree", "x": 0.0, "y": 0.0, "radius": 4.0, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
         ]
 
         for obs in self.obstacles:
             obs["active"] = True
 
         # === ORBIT MISSION PARAMETERS ===
-        self.declare_parameter("orbit_radius", 7.0)       # meters from tree center
-        self.declare_parameter("orbit_speed", 2.0)        # m/s tangential speed
+        self.declare_parameter("orbit_radius", 5.0)       # meters from tree center
+        self.declare_parameter("orbit_speed", 3.5)        # m/s tangential speed
         self.declare_parameter("orbit_altitude", 8.0)     # meters AGL
         self.declare_parameter("orbit_num_laps", 1)       # full 360° laps per tree
-        self.declare_parameter("orbit_points_per_lap", 36) # waypoints per 360°
+        self.declare_parameter("orbit_points_per_lap", 20) # waypoints per 360°
 
         self.orbit_radius = float(self.get_parameter("orbit_radius").value)
         self.orbit_speed = float(self.get_parameter("orbit_speed").value)
@@ -167,6 +169,12 @@ class DashboardBridgeNode(Node):
         self.orbit_center: Optional[Dict] = None  # current tree being orbited
         self.orbit_approach_path: List[Pose2D] = []  # path from current pos to orbit entry
         self.orbit_completed_trees: List[str] = []   # IDs of orbited trees
+        
+        # === INTEGRATED AUTO-ORBIT SURVEY STATE ===
+        self.survey_saved_path: List[Pose2D] = []
+        self.survey_saved_path_index: int = 0
+        self.survey_saved_active: bool = False
+        self.orbit_visited_trees: set = set()
 
         self.current_pose: Optional[Pose2D] = None
         self.home_pose: Optional[Pose2D] = None
@@ -256,6 +264,12 @@ class DashboardBridgeNode(Node):
         if self.mode not in ("auto", "survey_countdown"):
             self.mode = "manual"
             self.offboard_requested = True
+            
+            # Auto-arm if manual UP (z > 0.1) is received and drone is currently disarmed
+            is_armed = self.vehicle_status.get("armed", False)
+            if msg.linear.z > 0.1 and not is_armed:
+                self.get_logger().info("Manual UP detected while disarmed: Auto-arming drone...")
+                self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM))
 
     def goal_cb(self, msg: PoseStamped) -> None:
         if self.current_pose is None:
@@ -268,6 +282,7 @@ class DashboardBridgeNode(Node):
             return
 
         self.survey_active = False
+        self.survey_saved_path = []
         self.obstacles = [obs for obs in self.obstacles if obs["source"] == "gazebo_sdf"]
         for obs in self.obstacles: obs["active"] = False
 
@@ -308,6 +323,8 @@ class DashboardBridgeNode(Node):
 
         self.obstacles = [obs for obs in self.obstacles if obs["source"] == "gazebo_sdf"]
         for obs in self.obstacles: obs["active"] = False
+        self.orbit_visited_trees = set()
+        self.survey_saved_path = []
 
         self.get_logger().info("Menghitung rute optimal Boustrophedon untuk 4 Blok Sawah...")
         survey_wps = self.generate_boustrophedon_path()
@@ -468,10 +485,14 @@ class DashboardBridgeNode(Node):
             target = Pose2D(self.current_pose.x, self.current_pose.y, self.takeoff_altitude, self.current_pose.yaw)
             self.path = [target]
             self.path_index = 0
-            self.mode = "takeoff"
+            self.mode = "takeoff_spinup"
+            self._takeoff_spinup_start = time.monotonic()
+            self.sp_x = None
+            self.sp_y = None
+            self.sp_z = None
             self.survey_active = False
             self.offboard_requested = True
-            self.publish_status("auto_takeoff", f"Takeoff otomatis menuju {self.takeoff_altitude:.1f} m.")
+            self.publish_status("auto_takeoff", f"Takeoff otomatis dimulai. Menyalakan mesin (spin-up) selama 1.8 detik...")
 
         if self.mode in ("auto", "return_home"): 
             self.follow_path_tick()
@@ -489,14 +510,30 @@ class DashboardBridgeNode(Node):
                 self.rtl_triggered = False
                 self.publish_status("mission_started", "Waktu tunggu selesai. Misi survey dimulai!")
                 
+        elif self.mode == "takeoff_spinup":
+            if self.current_pose is not None:
+                target = Pose2D(self.current_pose.x, self.current_pose.y, self.current_pose.z, self.current_pose.yaw)
+                self.publish_position_setpoint(target, current_cruise_speed=1.5)
+            
+            if time.monotonic() - self._takeoff_spinup_start >= 1.8:
+                self.mode = "takeoff"
+                self.sp_x = self.current_pose.x
+                self.sp_y = self.current_pose.y
+                self.sp_z = self.current_pose.z
+                self.publish_status("takeoff_climb", f"Mesin siap. Terbang vertikal ke {self.takeoff_altitude}m.")
+
         elif self.mode in ("takeoff", "hold"):
             if self.path and 0 <= self.path_index < len(self.path):
+                if self.mode == "takeoff" and self.current_pose is not None and not self.vehicle_status.get("armed", False):
+                    self.path[self.path_index].x = self.current_pose.x
+                    self.path[self.path_index].y = self.current_pose.y
+                    self.path[self.path_index].yaw = self.current_pose.yaw
                 target = self.path[self.path_index]
             else:
                 target = self.current_pose
             self.publish_position_setpoint(target, current_cruise_speed=1.5)
 
-        if self.offboard_requested:
+        if self.offboard_requested or (self.mode in ("manual", "takeoff", "takeoff_spinup") and self.vehicle_status.get("navState") != 14):
             self.request_offboard_mode()
             self.offboard_requested = False
 
@@ -507,6 +544,48 @@ class DashboardBridgeNode(Node):
 
     def follow_path_tick(self) -> None:
         if not self.path or self.current_pose is None: return
+
+        # Check proximity to unvisited trees during autonomous flight for auto-orbit
+        if self.mode == "auto" or self.survey_active:
+            for obs in self.obstacles:
+                if obs.get("kind") == "tree" and obs.get("id") not in self.orbit_visited_trees:
+                    dist = math.hypot(self.current_pose.x - float(obs["x"]), self.current_pose.y - float(obs["y"]))
+                    if dist < 8.0:  # trigger distance in meters
+                        self.get_logger().warn(f"Auto-Orbit Triggered! Tree: {obs['id']} at dist: {dist:.1f}m")
+                        self.orbit_visited_trees.add(obs["id"])
+                        
+                        # Save current survey/goal state
+                        self.survey_saved_path = list(self.path)
+                        self.survey_saved_path_index = self.path_index
+                        self.survey_saved_active = self.survey_active
+                        self.survey_active = False
+                        
+                        # Initialize orbit parameters
+                        self.orbit_center = obs
+                        self.orbit_tree_index = 0
+                        self.orbit_trees = [obs]
+                        self.orbit_wp_index = 0
+                        self.orbit_completed_trees = []
+                        self.mode = "orbit"
+                        self.sp_x = None
+                        
+                        # Generate approach path to entry point
+                        tx, ty = float(obs["x"]), float(obs["y"])
+                        angle_to_drone = math.atan2(self.current_pose.y - ty, self.current_pose.x - tx)
+                        entry_x = tx + self.orbit_radius * math.cos(angle_to_drone)
+                        entry_y = ty + self.orbit_radius * math.sin(angle_to_drone)
+                        entry_point = Pose2D(entry_x, entry_y, self.orbit_altitude, 0.0)
+                        
+                        self.path = [entry_point]
+                        self.path_index = 0
+                        self.global_path = list(self.path)
+                        self.orbit_phase = "approach"
+                        
+                        self.orbit_waypoints = self._generate_orbit_waypoints(tx, ty, angle_to_drone)
+                        self.publish_path()
+                        self.publish_status("auto_orbit", f"Mendeteksi {obs['id']} pada jarak {dist:.1f}m. Memulai auto-orbit.")
+                        return
+
         target = self.path[min(self.path_index, len(self.path) - 1)]
         
         lookahead_dist = max(self.goal_acceptance_radius, self.cruise_speed * 0.5)
@@ -581,7 +660,7 @@ class DashboardBridgeNode(Node):
         max_d_xy = current_cruise_speed * dt
         max_d_z = self.vertical_speed * dt
 
-        if self.sp_x is None:
+        if self.sp_x is None or not self.vehicle_status.get("armed", False):
             self.sp_x = self.current_pose.x
             self.sp_y = self.current_pose.y
 
@@ -605,8 +684,17 @@ class DashboardBridgeNode(Node):
             self.sp_z = self.current_pose.z
 
         dz_sp = pose.z - self.sp_z
-        if abs(dz_sp) > max_d_z: self.sp_z += math.copysign(max_d_z, dz_sp)
-        else: self.sp_z = pose.z
+        
+        # When close to the target altitude (within 0.5m), reduce step rate
+        if abs(dz_sp) < 0.5:
+            effective_max_d_z = max_d_z * 0.4
+        else:
+            effective_max_d_z = max_d_z
+
+        if abs(dz_sp) > effective_max_d_z:
+            self.sp_z += math.copysign(effective_max_d_z, dz_sp)
+        else:
+            self.sp_z = pose.z
 
         msg = TrajectorySetpoint()
         msg.timestamp = self.now_us()
@@ -621,13 +709,16 @@ class DashboardBridgeNode(Node):
             vel_x = 0.0; vel_y = 0.0
             
         vel_z = 0.0
-        if abs(dz_sp) > max_d_z:
-            vel_z = math.copysign(self.vertical_speed, dz_sp)
-        else:
-            vel_z = 0.0
+        if abs(dz_sp) > 0.3:
+            ratio = min(1.0, abs(dz_sp) / 1.0)
+            vel_z = self.vertical_speed * ratio
             
         # Feedforward velocity (NED frame: Y is North, X is East, -Z is Down)
-        msg.velocity = [float(vel_y), float(vel_x), float(-vel_z)]
+        # During takeoff, set horizontal velocity feedforward to zero to prevent spikes
+        if self.mode == "takeoff":
+            msg.velocity = [0.0, 0.0, float(-math.copysign(vel_z, dz_sp))]
+        else:
+            msg.velocity = [float(vel_y), float(vel_x), float(-math.copysign(vel_z, dz_sp))]
         msg.acceleration = [float("nan"), float("nan"), float("nan")]
         msg.jerk = [float("nan"), float("nan"), float("nan")]
         # Calculate yaw to face the target if we are moving
@@ -638,6 +729,11 @@ class DashboardBridgeNode(Node):
         if self.mode in ("auto", "return_home", "orbit") and dist_drone > 0.2:
             target_yaw_enu = math.atan2(dy_drone, dx_drone)
             yaw_ned = math.pi / 2.0 - target_yaw_enu
+            # Normalize yaw to [-pi, pi]
+            yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
+            msg.yaw = float(yaw_ned)
+        elif self.mode in ("takeoff", "hold"):
+            yaw_ned = math.pi / 2.0 - pose.yaw
             # Normalize yaw to [-pi, pi]
             yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
             msg.yaw = float(yaw_ned)
@@ -701,9 +797,17 @@ class DashboardBridgeNode(Node):
             response.success = False; response.message = "Tidak ada PX4 local position."
             return response
         target = Pose2D(self.current_pose.x, self.current_pose.y, self.takeoff_altitude, self.current_pose.yaw)
-        self.path = [target]; self.path_index = 0; self.mode = "takeoff"; self.survey_active = False; self.offboard_requested = True
+        self.path = [target]
+        self.path_index = 0
+        self.mode = "takeoff_spinup"
+        self._takeoff_spinup_start = time.monotonic()
+        self.survey_active = False
+        self.offboard_requested = True
+        self.sp_x = None
+        self.sp_y = None
+        self.sp_z = None
         self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM))
-        response.success = True; response.message = f"Takeoff OFFBOARD menuju {self.takeoff_altitude:.1f} m."
+        response.success = True; response.message = f"Takeoff dimulai. Menyalakan mesin (spin-up) selama 1.8 detik..."
         return response
 
     def land_cb(self, _request: Trigger.Request, response: Trigger.Response):
@@ -719,6 +823,7 @@ class DashboardBridgeNode(Node):
 
     def emergency_stop_cb(self, _request: Trigger.Request, response: Trigger.Response):
         self.mode = "hold"; self.path = []; self.sp_x = None; self.manual_cmd = Twist(); self.offboard_requested = True; self.survey_active = False
+        self.survey_saved_path = []
         if self.current_pose: self.publish_position_setpoint(self.current_pose)
         self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, param1=1.0, param2=4.0)
         self.publish_status("emergency_stop", "EMERGENCY STOP TRIGGERED. Drone ditahan (LOITER).")
@@ -727,6 +832,7 @@ class DashboardBridgeNode(Node):
 
     def trigger_return_home(self, reason: str) -> None:
         self.rtl_triggered = True; self.survey_active = False
+        self.survey_saved_path = []
         if self.home_pose and self.current_pose:
             high_home = Pose2D(self.home_pose.x, self.home_pose.y, max(self.current_pose.z, 6.0), self.home_pose.yaw)
             self.path = []
@@ -876,6 +982,22 @@ class DashboardBridgeNode(Node):
     def _orbit_start_approach(self) -> None:
         """Generate path from current position to the orbit entry point of current tree."""
         if self.orbit_tree_index >= len(self.orbit_trees):
+            # All trees visited - resume survey/goal if paused
+            if self.survey_saved_path:
+                self.get_logger().info("Orbit completed! Resuming flight path...")
+                self.path = list(self.survey_saved_path)
+                self.path_index = self.survey_saved_path_index
+                self.survey_active = self.survey_saved_active
+                self.mode = "auto"
+                self.survey_saved_path = []
+                self.sp_x = None
+                self.global_path = list(self.path)
+                self.publish_path()
+                
+                status_msg = "Melanjutkan misi survey." if self.survey_active else "Melanjutkan perjalanan ke target."
+                self.publish_status("survey_resume", f"Mengorbit selesai. {status_msg}")
+                return
+
             # All trees visited - return home
             self.orbit_phase = "rtl"
             self.get_logger().info("Orbit mission: Semua pohon selesai! Kembali ke home.")

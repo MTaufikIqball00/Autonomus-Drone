@@ -203,7 +203,7 @@ def main():
     parser.add_argument("--no-db-logger", action="store_true", help="start MySQL tetapi jangan jalankan mysql_telemetry_logger")
     parser.add_argument("--px4-model", default="x500_lidar_2d")
     parser.add_argument("--px4-world", default="agricultural_field")
-    parser.add_argument("--px4-pose", default="-70,-15,0.35,0,0,0")
+    parser.add_argument("--px4-pose", default="-65,0,0.4,0,0,0")
     parser.add_argument("--frontend-port", default="3000")
     args = parser.parse_args()
 

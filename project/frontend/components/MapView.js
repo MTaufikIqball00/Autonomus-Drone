@@ -312,7 +312,7 @@ function drawObstacles(ctx, transform, obstacles) {
       ctx.stroke();
       ctx.fillStyle = "#a7f3d0";
       ctx.font = "500 11px 'Inter', sans-serif";
-      const label = obstacle.id?.startsWith("sawit") ? "🌴 Sawit" : (obstacle.id?.startsWith("pohon_tengah_obstacle") ? "🌴 Pohon" : "Tree");
+      const label = (obstacle.id?.startsWith("sawit") || obstacle.id?.includes("sawit")) ? "🌴 Sawit" : (obstacle.id?.startsWith("pohon") ? "🌴 Pohon" : "Tree");
       ctx.fillText(label, p.x + radius + 6, p.y + 4);
     }
   });

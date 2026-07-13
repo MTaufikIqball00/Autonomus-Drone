@@ -17,7 +17,7 @@ def generate_launch_description():
                         "takeoff_altitude": 8.0,
                         "landing_altitude": 0.3,
                         "manual_speed": 3.0,
-                        "vertical_speed": 1.5,
+                        "vertical_speed": 3.0,
                         "yaw_rate": 0.9,
                         "cruise_speed": 3.5,
                         "sweep_spacing": 20.0,  # Parameter baru: Jarak antar garis zigzag

@@ -39,8 +39,8 @@ export default function DashboardPage() {
           goal={ros.goal}
           pathDraft={ros.pathDraft}
           plannedPath={ros.plannedPath}
-          pathsJson={ros.pathsJson}
-          obstacles={ros.obstacles}
+          pathsJsonRef={ros.pathsJsonRef}
+          obstaclesRef={ros.obstaclesRef}
           sensorScan={ros.sensorScan}
           setPathDraft={ros.setPathDraft}
           setGoal={ros.setGoal}
