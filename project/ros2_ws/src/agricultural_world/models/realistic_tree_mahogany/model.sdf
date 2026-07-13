@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="realistic_tree_mahogany">
+    <static>true</static>
+    <link name="body">
+
+      <!-- ================= BATANG (trunk) — 2 segmen agar sedikit meruncing ================= -->
+      <visual name="trunk_lower">
+        <pose>0 0 1.25 0 0 0</pose>
+        <geometry><cylinder><radius>0.36</radius><length>2.5</length></cylinder></geometry>
+        <material>
+          <pbr>
+            <metal>
+              <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+              <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+              <roughness_map>model://realistic_tree_mahogany/materials/textures/bark_roughness.png</roughness_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="trunk_upper">
+        <pose>0 0 3.75 0 0 0</pose>
+        <geometry><cylinder><radius>0.24</radius><length>2.5</length></cylinder></geometry>
+        <material>
+          <pbr>
+            <metal>
+              <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+              <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+              <roughness_map>model://realistic_tree_mahogany/materials/textures/bark_roughness.png</roughness_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+
+      <!-- ================= CABANG (branches) ================= -->
+      <visual name="branch_1">
+        <pose>1.229 0.329 5.083 0 1.012 0.262</pose>
+        <geometry><cylinder><radius>0.10</radius><length>2.2</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="branch_2">
+        <pose>-0.418 1.149 4.569 0 1.082 1.920</pose>
+        <geometry><cylinder><radius>0.09</radius><length>2.0</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="branch_3">
+        <pose>-1.243 -0.452 4.988 0 0.960 3.491</pose>
+        <geometry><cylinder><radius>0.11</radius><length>2.4</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="branch_4">
+        <pose>0.398 -1.093 4.375 0 1.047 5.061</pose>
+        <geometry><cylinder><radius>0.09</radius><length>1.9</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="branch_5">
+        <pose>0.714 0.851 4.959 0 1.134 0.873</pose>
+        <geometry><cylinder><radius>0.08</radius><length>1.7</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_mahogany/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_mahogany/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+
+      <!-- ================= TAJUK DAUN (canopy) =================
+           Kombinasi: 3 vertical cross-plane (tampak bagus dari samping)
+           + 3 shoulder facet miring (tampak bagus dari sudut oblique)
+           + 1 top cap datar (tampak bagus dari atas / sudut pandang drone)
+           Semua pakai PNG RGBA (alpha cutout) supaya siluet tidak kotak. -->
+      <visual name="canopy_vert_1">
+        <pose>0 0 7.4 0 0 0</pose>
+        <geometry><box><size>7.0 0.15 6.0</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="canopy_vert_2">
+        <pose>0 0 7.4 0 0 1.0472</pose>
+        <geometry><box><size>7.0 0.15 6.0</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="canopy_vert_3">
+        <pose>0 0 7.4 0 0 2.0944</pose>
+        <geometry><box><size>7.0 0.15 6.0</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+
+      <visual name="canopy_shoulder_1">
+        <pose>1.460 0.843 8.814 0 0.8727 0.5236</pose>
+        <geometry><box><size>4.2 4.2 0.15</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="canopy_shoulder_2">
+        <pose>-1.460 0.843 8.814 0 0.8727 2.6180</pose>
+        <geometry><box><size>4.2 4.2 0.15</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="canopy_shoulder_3">
+        <pose>0 -1.685 8.814 0 0.8727 4.7124</pose>
+        <geometry><box><size>4.2 4.2 0.15</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+
+      <visual name="canopy_top_cap">
+        <pose>0 0 9.7 0 0 0.4</pose>
+        <geometry><box><size>5.5 5.5 0.15</size></box></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://realistic_tree_mahogany/materials/textures/leaf_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+
+      <!-- ================= COLLISION (disederhanakan untuk performa) =================
+           1x cylinder untuk batang + 1x ellipsoid untuk tajuk.
+           Cukup akurat untuk deteksi obstacle-avoidance tanpa membebani physics engine. -->
+      <collision name="trunk_collision">
+        <pose>0 0 2.5 0 0 0</pose>
+        <geometry><cylinder><radius>0.42</radius><length>5.0</length></cylinder></geometry>
+      </collision>
+      <collision name="canopy_collision">
+        <pose>0 0 7.4 0 0 0</pose>
+        <geometry><ellipsoid><radii>4.0 4.0 3.2</radii></ellipsoid></geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

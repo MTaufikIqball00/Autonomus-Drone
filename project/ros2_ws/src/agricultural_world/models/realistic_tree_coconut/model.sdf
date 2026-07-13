@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="realistic_tree_coconut">
+    <static>true</static>
+    <link name="body">
+
+      <!-- ================= BATANG melengkung, 6 segmen cylinder beruntun ================= -->
+      <visual name="trunk_seg_1">
+        <pose>0.026 0.012 0.749 0 0.038 0.436</pose>
+        <geometry><cylinder><radius>0.20</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+          <roughness_map>model://realistic_tree_coconut/materials/textures/bark_roughness.png</roughness_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="trunk_seg_2">
+        <pose>0.104 0.049 2.247 0 0.077 0.436</pose>
+        <geometry><cylinder><radius>0.19</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="trunk_seg_3">
+        <pose>0.235 0.109 3.740 0 0.115 0.436</pose>
+        <geometry><cylinder><radius>0.17</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="trunk_seg_4">
+        <pose>0.417 0.194 5.226 0 0.154 0.436</pose>
+        <geometry><cylinder><radius>0.16</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="trunk_seg_5">
+        <pose>0.650 0.303 6.703 0 0.192 0.436</pose>
+        <geometry><cylinder><radius>0.14</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="trunk_seg_6">
+        <pose>0.935 0.436 8.170 0 0.230 0.436</pose>
+        <geometry><cylinder><radius>0.12</radius><length>1.5</length></cylinder></geometry>
+        <material><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/bark_albedo.png</albedo_map>
+          <normal_map>model://realistic_tree_coconut/materials/textures/bark_normal.png</normal_map>
+        </metal></pbr></material>
+      </visual>
+
+      <!-- Pucuk batang -->
+      <visual name="crown_bud">
+        <pose>1.091 0.509 8.9 0 0 0</pose>
+        <geometry><sphere><radius>0.32</radius></sphere></geometry>
+        <material><ambient>0.20 0.42 0.16 1</ambient><diffuse>0.24 0.50 0.18 1</diffuse></material>
+      </visual>
+
+      <!-- ================= PELEPAH (fronds) — 6 buah menjuntai radial ================= -->
+      <visual name="frond_1">
+        <pose>2.541 0.509 8.223 0 2.007 0.000</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="frond_2">
+        <pose>1.816 1.764 8.223 0 2.007 1.047</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="frond_3">
+        <pose>0.365 1.764 8.223 0 2.007 2.094</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="frond_4">
+        <pose>-0.360 0.509 8.223 0 2.007 3.142</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="frond_5">
+        <pose>0.365 -0.747 8.223 0 2.007 4.189</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+      <visual name="frond_6">
+        <pose>1.816 -0.747 8.223 0 2.007 5.236</pose>
+        <geometry><box><size>0.9 0.10 3.4</size></box></geometry>
+        <material><double_sided>true</double_sided><pbr><metal>
+          <albedo_map>model://realistic_tree_coconut/materials/textures/leaf_albedo.png</albedo_map>
+        </metal></pbr></material>
+      </visual>
+
+      <!-- Tandan buah kelapa (detail kecil) -->
+      <visual name="fruit_cluster_1">
+        <pose>1.534 0.587 8.2 0 0 0</pose>
+        <geometry><sphere><radius>0.17</radius></sphere></geometry>
+        <material><ambient>0.42 0.36 0.18 1</ambient><diffuse>0.50 0.42 0.20 1</diffuse></material>
+      </visual>
+      <visual name="fruit_cluster_2">
+        <pose>0.802 0.854 8.2 0 0 0</pose>
+        <geometry><sphere><radius>0.17</radius></sphere></geometry>
+        <material><ambient>0.42 0.36 0.18 1</ambient><diffuse>0.50 0.42 0.20 1</diffuse></material>
+      </visual>
+      <visual name="fruit_cluster_3">
+        <pose>0.937 0.086 8.2 0 0 0</pose>
+        <geometry><sphere><radius>0.17</radius></sphere></geometry>
+        <material><ambient>0.42 0.36 0.18 1</ambient><diffuse>0.50 0.42 0.20 1</diffuse></material>
+      </visual>
+
+      <!-- ================= COLLISION disederhanakan =================
+           1 cylinder besar membungkus seluruh lengkungan batang,
+           1 ellipsoid untuk zona pelepah di pucuk. -->
+      <collision name="trunk_collision">
+        <pose>0.545 0.255 4.45 0 0 0</pose>
+        <geometry><cylinder><radius>0.9</radius><length>8.9</length></cylinder></geometry>
+      </collision>
+      <collision name="crown_collision">
+        <pose>1.091 0.509 8.3 0 0 0</pose>
+        <geometry><ellipsoid><radii>3.3 3.3 1.6</radii></ellipsoid></geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

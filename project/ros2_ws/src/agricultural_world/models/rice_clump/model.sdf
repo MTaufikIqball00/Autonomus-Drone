@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="rice_clump">
+    <static>true</static>
+    <link name="body">
+      <visual name="blade_1">
+        <pose>0 0 0.30 0 0 0</pose>
+        <geometry><box><size>0.55 0.04 0.60</size></box></geometry>
+        <material><double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://rice_clump/materials/textures/rice_blade_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="blade_2">
+        <pose>0 0 0.30 0 0 1.0472</pose>
+        <geometry><box><size>0.55 0.04 0.60</size></box></geometry>
+        <material><double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://rice_clump/materials/textures/rice_blade_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="blade_3">
+        <pose>0 0 0.30 0 0 2.0944</pose>
+        <geometry><box><size>0.55 0.04 0.60</size></box></geometry>
+        <material><double_sided>true</double_sided>
+          <pbr><metal><albedo_map>model://rice_clump/materials/textures/rice_blade_albedo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <!-- Tanpa <collision> secara sengaja: rumpun padi setinggi ~0.6 m tidak
+           signifikan sebagai obstacle drone, dan meniadakannya menghemat
+           beban physics engine karena jumlah instance bisa puluhan. -->
+    </link>
+  </model>
+</sdf>

@@ -38,7 +38,7 @@ PX4_QOS = QoSProfile(
     reliability=QoSReliabilityPolicy.BEST_EFFORT,
     durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
     history=QoSHistoryPolicy.KEEP_LAST,
-    depth=10,
+    depth=1,
 )
 
 WORLD = {"x_min": -190.0, "x_max": 370.0, "y_min": -220.0, "y_max": 160.0}
@@ -84,6 +84,8 @@ def yaw_to_quaternion(yaw: float) -> Quaternion:
 
 def clamp(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
+
+import concurrent.futures
 
 class DashboardBridgeNode(Node):
     def __init__(self) -> None:
@@ -135,10 +137,9 @@ class DashboardBridgeNode(Node):
         self.wind_abort_threshold = float(self.get_parameter("wind_abort_threshold").value)
         self.setpoint_period = 1.0 / max(2.0, float(self.get_parameter("offboard_setpoint_rate").value))
 
-        # 2 Large Trees at Center from E:\agricultural_field.sdf
+        # 1 Palm Tree at Center from the newly uploaded agricultural_field.sdf
         self.obstacles = [
-            {"id": "pohon_tengah_obstacle_1", "kind": "tree", "x": 0.0, "y": 0.0, "radius": 7.5, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
-            {"id": "pohon_tengah_obstacle_2", "kind": "tree", "x": 8.0, "y": -14.0, "radius": 7.5, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
+            {"id": "pohon_tengah_obstacle", "kind": "tree", "x": 0.0, "y": 0.0, "radius": 4.0, "clearance": 2.0, "height": 12.0, "source": "gazebo_sdf"},
         ]
 
         for obs in self.obstacles:
@@ -180,6 +181,9 @@ class DashboardBridgeNode(Node):
         self.total_manual_battery = 0.0
         self.last_tick_time = time.monotonic()
         self.last_battery = None
+        
+        self.planning_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        self.planning_future = None
         self.offboard_requested = False
         self.path: List[Pose2D] = []
         self.path_index = 0
@@ -270,14 +274,27 @@ class DashboardBridgeNode(Node):
         goal = Pose2D(x=float(msg.pose.position.x), y=float(msg.pose.position.y), z=float(msg.pose.position.z) or self.current_pose.z, yaw=self.current_pose.yaw)
         self.last_goal = goal
         start = self.current_pose
-        self.get_logger().info(f"Goal diterima. Start otomatis: ({start.x:.1f}, {start.y:.1f}, {start.z:.1f}) → Goal: ({goal.x:.1f}, {goal.y:.1f}, {goal.z:.1f})")
+        self.get_logger().info(f"Goal diterima. Menghitung rute: ({start.x:.1f}, {start.y:.1f}, {start.z:.1f}) → Goal: ({goal.x:.1f}, {goal.y:.1f}, {goal.z:.1f})")
         
-        self.path = self.plan_path(start, goal)
-        self.path_index = 0
-        self.mode = "auto"
-        self.offboard_requested = True
-        self.mission_start_time = time.monotonic()
-        self.mission_distance_m = 0.0
+        self.path = [] # Kosongkan path saat computing
+        self.mode = "auto" # Pindah mode auto, drone akan hold position (karena path kosong)
+        self.publish_status("planning", "Menghitung Global Path...")
+        
+        def done_cb(fut):
+            if fut.cancelled(): return
+            self.path = fut.result()
+            self.path_index = 0
+            self.offboard_requested = True
+            self.mission_start_time = time.monotonic()
+            self.mission_distance_m = 0.0
+            self.publish_path()
+            self.get_logger().info("Global Path selesai dihitung.")
+            self.publish_status("auto", "Path siap, memulai navigasi.")
+            
+        if self.planning_future and not self.planning_future.done():
+            self.planning_future.cancel()
+        self.planning_future = self.planning_executor.submit(self.plan_path, start, goal)
+        self.planning_future.add_done_callback(done_cb)
         self.mission_start_battery = self.battery.get("remaining")
         self.rtl_triggered = False
         self.publish_path()
@@ -712,51 +729,91 @@ class DashboardBridgeNode(Node):
         self.rtl_triggered = True; self.survey_active = False
         if self.home_pose and self.current_pose:
             high_home = Pose2D(self.home_pose.x, self.home_pose.y, max(self.current_pose.z, 6.0), self.home_pose.yaw)
-            self.path = self.plan_path(self.current_pose, high_home); self.path_index = 0; self.mode = "return_home"; self.offboard_requested = True
-            self.publish_path()
+            self.path = []
+            self.mode = "return_home"
+            
+            def done_cb(fut):
+                if fut.cancelled(): return
+                self.path = fut.result()
+                self.path_index = 0
+                self.offboard_requested = True
+                self.publish_path()
+                
+            if self.planning_future and not self.planning_future.done(): self.planning_future.cancel()
+            self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, high_home)
+            self.planning_future.add_done_callback(done_cb)
         self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH)
         self.publish_status("return_home", f"RTL dipicu: {reason}.")
 
     def replan_from_current(self, reason: str) -> None:
         if self.current_pose is None: return
         
-        # --- RRT DISABLED BY USER REQUEST ---
-        # if self.global_path:
-        #     resume_idx = self.path_index
-        #     found_safe = False
-        #     while resume_idx < len(self.global_path):
-        #         wp = self.global_path[resume_idx]
-        #         wp_blocked = False
-        #         for obs in self.obstacles:
-        #             if obs.get("source") == "gazebo_sdf" and not obs.get("active", False): continue
-        #             radius = float(obs["radius"]) + float(obs["clearance"])
-        #             if math.hypot(wp.x - float(obs["x"]), wp.y - float(obs["y"])) <= radius:
-        #                 wp_blocked = True
-        #                 break
-        #         if not wp_blocked:
-        #             found_safe = True
-        #             break
-        #         resume_idx += 1
-        #
-        #     if found_safe:
-        #         local_goal = self.global_path[resume_idx]
-        #         detour_grid = self.rrt((self.current_pose.x, self.current_pose.y), (local_goal.x, local_goal.y))
-        #         if detour_grid:
-        #             self.local_path = [Pose2D(x, y, local_goal.z, local_goal.yaw) for x, y in detour_grid]
-        #             detour_wps = [Pose2D(x, y, local_goal.z, local_goal.yaw) for x, y in self.smooth_path(detour_grid)]
-        #             self.path = detour_wps + self.global_path[resume_idx:]
-        #             self.path_index = 0
-        #             self.publish_path()
-        #             self.publish_status("replan", f"RRT detour (Local Plan) dibuat menghindari rintangan ({reason}).")
-        #             return
-        # ------------------------------------
+        # --- HYBRID RRT*-A* LOCAL PLANNER DENGAN ODI (Sesuai Bab 3) ---
+        if self.global_path:
+            # 1. Cari titik re-entry aman terdekat di jalur Boustrophedon
+            resume_idx = self.path_index
+            found_safe = False
+            while resume_idx < len(self.global_path):
+                wp = self.global_path[resume_idx]
+                wp_blocked = False
+                for obs in self.obstacles:
+                    if obs.get("source") == "gazebo_sdf" and not obs.get("active", False): continue
+                    radius = float(obs["radius"]) + float(obs["clearance"])
+                    if math.hypot(wp.x - float(obs["x"]), wp.y - float(obs["y"])) <= radius:
+                        wp_blocked = True
+                        break
+                if not wp_blocked:
+                    found_safe = True
+                    break
+                resume_idx += 1
+        
+            if found_safe:
+                local_goal = self.global_path[resume_idx]
+                
+                # 2. Kalkulasi Obstacle Density Index (ODI) di sekitar Drone (Radius 15m)
+                # Menghitung berapa banyak rintangan yang terdeteksi oleh LiDAR saat ini
+                obs_count = sum(1 for obs in self.obstacles if math.hypot(self.current_pose.x - float(obs["x"]), self.current_pose.y - float(obs["y"])) < 15.0)
+                
+                # 3. Logika Pemilihan (Switching Logic) Hybrid RRT*-A*
+                # Jika renggang (<= 2 rintangan), gunakan A* agar rute sangat optimal.
+                # Jika padat (> 2 rintangan), gunakan RRT* agar kalkulasi edge computing lebih cepat.
+                if obs_count <= 2:
+                    self.get_logger().info(f"ODI Rendah ({obs_count} rintangan). Memilih A* untuk Detour.")
+                    detour_grid = self.a_star((self.current_pose.x, self.current_pose.y), (local_goal.x, local_goal.y))
+                    alg_name = "A*"
+                else:
+                    self.get_logger().info(f"ODI Tinggi ({obs_count} rintangan). Memilih RRT* untuk Detour.")
+                    detour_grid = self.rrt((self.current_pose.x, self.current_pose.y), (local_goal.x, local_goal.y))
+                    alg_name = "RRT*"
+
+                if detour_grid:
+                    # 4. Penghalusan Jalur menggunakan Kurva Bézier
+                    pruned_detour = self.smooth_path(detour_grid)
+                    smoothed_detour = self.bezier_corner_smoothing(pruned_detour, corner_dist=4.0, num_samples=10)
+                    
+                    # 5. Gabungkan Rute Halus dengan Jalur Utama
+                    self.local_path = [Pose2D(x, y, local_goal.z, local_goal.yaw) for x, y in smoothed_detour]
+                    self.path = self.local_path + self.global_path[resume_idx:]
+                    self.path_index = 0
+                    self.publish_path()
+                    self.publish_status("replan", f"Hybrid {alg_name} detour halus dibuat menghindari rintangan ({reason}).")
+                    return
+        # --------------------------------------------------------------
 
         if self.last_goal is None: return
-        self.path = self.plan_path(self.current_pose, self.last_goal)
-        self.global_path = list(self.path)
-        self.local_path = []
-        self.path_index = 0
-        self.publish_path()
+        self.publish_status("replan", f"Menghitung ulang Global Path karena {reason}...")
+        def done_cb(fut):
+            if fut.cancelled(): return
+            self.path = fut.result()
+            self.global_path = list(self.path)
+            self.local_path = []
+            self.path_index = 0
+            self.publish_path()
+            self.publish_status("replan", f"Global Path siap.")
+            
+        if self.planning_future and not self.planning_future.done(): self.planning_future.cancel()
+        self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, self.last_goal)
+        self.planning_future.add_done_callback(done_cb)
         self.publish_status("replan", f"Global A* Path replanned karena {reason}.")
 
     def plan_path(self, start: Pose2D, goal: Pose2D) -> List[Pose2D]:
@@ -824,11 +881,17 @@ class DashboardBridgeNode(Node):
             self.get_logger().info("Orbit mission: Semua pohon selesai! Kembali ke home.")
             if self.home_pose and self.current_pose:
                 high_home = Pose2D(self.home_pose.x, self.home_pose.y, self.orbit_altitude, self.home_pose.yaw)
-                self.path = self.plan_path(self.current_pose, high_home)
-                self.path_index = 0
-                self.global_path = list(self.path)
-                self.publish_path()
-                self.publish_status("orbit_rtl", "Semua pohon telah di-orbit. Kembali ke titik awal.")
+                self.path = []
+                def done_cb(fut):
+                    if fut.cancelled(): return
+                    self.path = fut.result()
+                    self.path_index = 0
+                    self.global_path = list(self.path)
+                    self.publish_path()
+                    self.publish_status("orbit_rtl", "Semua pohon telah di-orbit. Kembali ke titik awal.")
+                if self.planning_future and not self.planning_future.done(): self.planning_future.cancel()
+                self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, high_home)
+                self.planning_future.add_done_callback(done_cb)
             return
 
         tree = self.orbit_trees[self.orbit_tree_index]
@@ -846,12 +909,22 @@ class DashboardBridgeNode(Node):
         entry_point = Pose2D(entry_x, entry_y, self.orbit_altitude, 0.0)
 
         # Plan path from current pos to entry point
+        self.orbit_phase = "approach"
+        self.path = []
         if self.current_pose:
-            self.path = self.plan_path(self.current_pose, entry_point)
+            def done_cb(fut):
+                if fut.cancelled(): return
+                self.path = fut.result()
+                self.path_index = 0
+                self.global_path = list(self.path)
+                
+            if self.planning_future and not self.planning_future.done(): self.planning_future.cancel()
+            self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, entry_point)
+            self.planning_future.add_done_callback(done_cb)
         else:
             self.path = [entry_point]
-        self.path_index = 0
-        self.global_path = list(self.path)
+            self.path_index = 0
+            self.global_path = list(self.path)
         self.orbit_phase = "approach"
 
         # Generate orbit waypoints for this tree
@@ -1171,15 +1244,15 @@ class DashboardBridgeNode(Node):
                 radius = float(obstacle["radius"]) + float(obstacle["clearance"])
                 
                 # ESCAPE LOGIC: If starting point is inside the obstacle, but the new point is moving AWAY from the center, allow it!
-                dist_a = math.hypot(ax - ox, ay - oy)
-                if dist_a <= radius:
-                    dist_b = math.hypot(bx - ox, by - oy)
-                    if dist_b > dist_a:
+                dist_sq_a = (ax - ox)**2 + (ay - oy)**2
+                if dist_sq_a <= radius*radius:
+                    dist_sq_b = (bx - ox)**2 + (by - oy)**2
+                    if dist_sq_b > dist_sq_a:
                         continue 
                         
                 t = clamp(((ox - ax) * dx + (oy - ay) * dy) / denom, 0.0, 1.0)
                 closest_x, closest_y = ax + t * dx, ay + t * dy
-                if math.hypot(closest_x - ox, closest_y - oy) <= radius: return True
+                if (closest_x - ox)**2 + (closest_y - oy)**2 <= radius*radius: return True
             return False
 
         class Node:
@@ -1190,14 +1263,14 @@ class DashboardBridgeNode(Node):
         nodes = [start_node]
         for _ in range(max_iter):
             rnd = (goal[0], goal[1]) if random.random() < 0.2 else (random.uniform(WORLD["x_min"], WORLD["x_max"]), random.uniform(WORLD["y_min"], WORLD["y_max"]))
-            nearest = min(nodes, key=lambda n: math.hypot(n.x - rnd[0], n.y - rnd[1]))
+            nearest = min(nodes, key=lambda n: (n.x - rnd[0])**2 + (n.y - rnd[1])**2)
             theta = math.atan2(rnd[1] - nearest.y, rnd[0] - nearest.x)
             new_x = nearest.x + step_size * math.cos(theta)
             new_y = nearest.y + step_size * math.sin(theta)
             
             if not line_crosses_obstacle_rrt((nearest.x, nearest.y), (new_x, new_y)):
                 new_node = Node(new_x, new_y); new_node.parent = nearest; nodes.append(new_node)
-                if math.hypot(new_node.x - goal[0], new_node.y - goal[1]) <= step_size and not line_crosses_obstacle_rrt((new_node.x, new_node.y), goal):
+                if (new_node.x - goal[0])**2 + (new_node.y - goal[1])**2 <= step_size*step_size and not line_crosses_obstacle_rrt((new_node.x, new_node.y), goal):
                     goal_node = Node(goal[0], goal[1]); goal_node.parent = new_node; nodes.append(goal_node)
                     path = []; curr = goal_node
                     while curr is not None: path.append((curr.x, curr.y)); curr = curr.parent
@@ -1377,7 +1450,7 @@ class DashboardBridgeNode(Node):
             "mode": self.mode, "home": self.pose_dict(self.home_pose), "goal": self.pose_dict(self.last_goal),
             "battery": self.battery, "vehicle": self.vehicle_status, "wind": self.wind,
             "nearestObstacle": self.nearest_obstacle_m, "rtlTriggered": self.rtl_triggered,
-            "planner": {"algorithm": "Integrated Boustrophedon + A* Detour", "resolution": self.planner_resolution},
+            "planner": {"algorithm": "Integrated Boustrophedon + Hybrid A* & RRT Detour", "resolution": self.planner_resolution},
             "orbit": orbit_info,
         }
         self.state_pub.publish(String(data=json.dumps(payload)))

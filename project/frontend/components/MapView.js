@@ -66,8 +66,8 @@ export default function MapView({
   goal,
   pathDraft,
   plannedPath,
-  pathsJson,
-  obstacles,
+  pathsJsonRef,
+  obstaclesRef,
   sensorScan,
   setPathDraft,
   setGoal,
@@ -104,8 +104,8 @@ export default function MapView({
         goal, 
         pathDraft, 
         plannedPath,
-        pathsJson,
-        obstacles,
+        pathsJson: pathsJsonRef?.current || { global: [], local: [], final: [] },
+        obstacles: obstaclesRef?.current || [],
         sensorScan 
       });
       animationId = requestAnimationFrame(render);
@@ -113,7 +113,7 @@ export default function MapView({
 
     render();
     return () => cancelAnimationFrame(animationId);
-  }, [size, trail, goal, pathDraft, plannedPath, obstacles, sensorScan, odomRef, yawRef]);
+  }, [size, trail, goal, pathDraft, plannedPath, sensorScan, odomRef, yawRef, pathsJsonRef, obstaclesRef]);
 
   const handleClick = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -125,6 +125,7 @@ export default function MapView({
     const world = transform.toWorld({ x: px, y: py });
 
     // Cek apakah klik pada obstacle
+    const obstacles = obstaclesRef?.current || [];
     const clickedObs = obstacles.find((obs) => {
       const radius = Number(obs.radius || 0) + Number(obs.clearance || 0);
       return Math.hypot(world.x - Number(obs.x), world.y - Number(obs.y)) <= radius;
@@ -141,7 +142,7 @@ export default function MapView({
     const dest = { x: world.x, y: world.y, z: world.z || 0 };
     setPathDraft({ start: { ...dronePos }, end: dest });
     if (setGoal) setGoal(dest);
-  }, [size, obstacles, onObstacleSelect, odomRef, setPathDraft, setGoal]);
+  }, [size, onObstacleSelect, odomRef, setPathDraft, setGoal, obstaclesRef]);
 
   const handleDoubleClick = useCallback((e) => {
     e.preventDefault();

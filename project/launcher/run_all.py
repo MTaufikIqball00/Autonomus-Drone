@@ -203,7 +203,7 @@ def main():
     parser.add_argument("--no-db-logger", action="store_true", help="start MySQL tetapi jangan jalankan mysql_telemetry_logger")
     parser.add_argument("--px4-model", default="x500_lidar_2d")
     parser.add_argument("--px4-world", default="agricultural_field")
-    parser.add_argument("--px4-pose", default="-65,0,0.35,0,0,0")
+    parser.add_argument("--px4-pose", default="-70,-15,0.35,0,0,0")
     parser.add_argument("--frontend-port", default="3000")
     args = parser.parse_args()
 
@@ -221,10 +221,27 @@ def main():
     try:
         launch_px4 = args.px4 or args.gazebo
         if launch_px4:
+            custom_world_dir = ROS_WS / "src" / "agricultural_world" / "worlds"
+            custom_model_dir = ROS_WS / "src" / "agricultural_world" / "models"
+            
+            # Tentukan apakah world ada di custom dir atau default PX4
+            use_custom_world = (custom_world_dir / f"{args.px4_world}.sdf").exists()
+            px4_world_dir = PX4_DIR / "Tools" / "simulation" / "gz" / "worlds"
+            
+            if use_custom_world:
+                target_world_file = custom_world_dir / f"{args.px4_world}.sdf"
+                symlink_dest = px4_world_dir / f"{args.px4_world}.sdf"
+                # Hapus symlink/file lama jika ada agar bisa buat symlink baru
+                if symlink_dest.exists() or symlink_dest.is_symlink():
+                    symlink_dest.unlink()
+                # Buat symlink dari ros2_ws ke PX4 dir
+                os.symlink(target_world_file, symlink_dest)
+            
             gz_resource_path = ":".join(
                 [
+                    str(custom_model_dir),
                     str(PX4_DIR / "Tools" / "simulation" / "gz" / "models"),
-                    str(PX4_DIR / "Tools" / "simulation" / "gz" / "worlds"),
+                    str(px4_world_dir),
                     os.environ.get("GZ_SIM_RESOURCE_PATH", ""),
                 ]
             )
@@ -233,7 +250,7 @@ def main():
                 "PX4_SIM_MODEL": args.px4_model,
                 "PX4_GZ_MODEL_POSE": args.px4_pose,
                 "PX4_GZ_MODELS": str(PX4_DIR / "Tools" / "simulation" / "gz" / "models"),
-                "PX4_GZ_WORLDS": str(PX4_DIR / "Tools" / "simulation" / "gz" / "worlds"),
+                "PX4_GZ_WORLDS": str(px4_world_dir),
                 "GZ_SIM_RESOURCE_PATH": gz_resource_path,
             }
             processes.append(
@@ -255,11 +272,22 @@ def main():
                     env=px4_env,
                 )
             )
-            time.sleep(5.0)
             lidar_gz_topic = (
                 f"/world/{args.px4_world}/model/{args.px4_model}_0/"
                 "link/link/sensor/lidar_2d_v2/scan"
             )
+            print(f"[launcher] Menunggu Gazebo memuat {lidar_gz_topic}...")
+            for _ in range(60):
+                try:
+                    out = subprocess.check_output("gz topic -l", shell=True, text=True, stderr=subprocess.DEVNULL)
+                    if lidar_gz_topic in out:
+                        print("[launcher] Gazebo Lidar topic ditemukan, melanjutkan bridge...")
+                        break
+                except Exception:
+                    pass
+                time.sleep(1.0)
+            else:
+                print("[launcher] Peringatan: Gazebo Lidar topic tidak ditemukan setelah 60 detik! Bridge mungkin gagal.")
             processes.append(
                 run(
                     "gz_lidar_bridge",
@@ -305,7 +333,7 @@ def main():
         processes.append(
             run(
                 "nextjs",
-                f"npm run dev -- --port {args.frontend_port}",
+                f"npm run build && npm start -- -p {args.frontend_port}",
                 cwd=FRONTEND,
             )
         )

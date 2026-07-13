@@ -41,10 +41,10 @@ export function useRos(url = DEFAULT_URL) {
   const [goal, setGoal] = useState(null);
   const [pathDraft, setPathDraft] = useState({ start: null, end: null });
   const [dashboardState, setDashboardState] = useState({});
-  const [obstacles, setObstacles] = useState([]);
+  const obstaclesRef = useRef([]);
   const [sensorScan, setSensorScan] = useState({ ranges: [], nearest: null });
   const [plannedPath, setPlannedPath] = useState([]);
-  const [pathsJson, setPathsJson] = useState({ global: [], local: [], final: [] });
+  const pathsJsonRef = useRef({ global: [], local: [], final: [] });
   const [metrics, setMetrics] = useState({});
 
   const prevModeRef = useRef("idle");
@@ -207,7 +207,7 @@ export function useRos(url = DEFAULT_URL) {
 
       obstaclesTopic.subscribe((msg) => {
         const next = parseJsonMessage(msg, []);
-        if (Array.isArray(next)) setObstacles(next);
+        if (Array.isArray(next)) obstaclesRef.current = next;
       });
 
       sensorTopic.subscribe((msg) => {
@@ -223,7 +223,7 @@ export function useRos(url = DEFAULT_URL) {
       });
 
       pathsJsonTopic.subscribe((msg) => {
-        setPathsJson(parseJsonMessage(msg, { global: [], local: [], final: [] }));
+        pathsJsonRef.current = parseJsonMessage(msg, { global: [], local: [], final: [] });
       });
 
       topicsRef.current.cmdVel = new ROSLIB.Topic({
@@ -371,17 +371,17 @@ export function useRos(url = DEFAULT_URL) {
       url,
       connected,
       error,
-      odomRef, // Berikan akses Ref untuk Canvas
+      odomRef,
       yawRef,
-      odom: uiOdom, // uiOdom untuk text display di ControlPanel
+      odom: uiOdom,
       trail,
       goal,
       pathDraft,
       dashboardState,
-      obstacles,
       sensorScan,
       plannedPath,
-      pathsJson,
+      pathsJsonRef,
+      obstaclesRef,
       metrics,
       setGoal,
       setPathDraft,
@@ -400,10 +400,8 @@ export function useRos(url = DEFAULT_URL) {
       goal,
       pathDraft,
       dashboardState,
-      obstacles,
       sensorScan,
       plannedPath,
-      pathsJson,
       metrics,
       publishVelocity,
       callTriggerService,

@@ -90,8 +90,8 @@
          SCENE CONFIGURATION
     ====================================================== -->
     <scene>
-      <ambient>0.6 0.6 0.6 1</ambient>
-      <background>0.6 0.78 0.95 1</background>
+      <ambient>0.85 0.85 0.85 1</ambient>
+      <background>0.85 0.85 0.85 1</background>
       <shadows>true</shadows>
       <grid>false</grid>
       <origin_visual>false</origin_visual>
@@ -156,7 +156,7 @@
     <model name="ground_base">
       <static>true</static>
       <link name="link">
-        <collision name="col">
+        <collision name="col_1">
           <geometry>
             <plane>
               <normal>0 0 1</normal>
@@ -180,7 +180,7 @@
             </plane>
           </geometry>
           <material>
-            <ambient>0.35 0.30 0.20 1</ambient>
+            <ambient>0.85 0.85 0.85 1</ambient>
             <diffuse>0.45 0.40 0.28 1</diffuse>
             <specular>0.05 0.05 0.05 1</specular>
           </material>
@@ -197,17 +197,1516 @@
       <static>true</static>
       <pose>-65 0 0 0 0 0</pose>
       <link name="link">
-        <!-- Tanah sawah -->
-        <visual name="soil">
+        <visual name="soil_base">
           <geometry>
-            <box><size>220 290 0.1</size></box>
+            <box><size>220.00 290.00 0.10</size></box>
           </geometry>
           <material>
-            <ambient>0.22 0.30 0.15 1</ambient>
-            <diffuse>0.28 0.42 0.18 1</diffuse>
+            <ambient>0.35 0.25 0.15 1</ambient>
+            <diffuse>0.45 0.32 0.20 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <visual name="plot_0">
+          <pose>-99.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_1">
+          <pose>-99.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_2">
+          <pose>-99.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_3">
+          <pose>-99.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_4">
+          <pose>-99.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_5">
+          <pose>-99.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_6">
+          <pose>-99.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_7">
+          <pose>-99.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_8">
+          <pose>-99.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_9">
+          <pose>-99.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_10">
+          <pose>-99.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_11">
+          <pose>-99.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_12">
+          <pose>-99.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_13">
+          <pose>-99.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_14">
+          <pose>-99.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_15">
+          <pose>-77.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_16">
+          <pose>-77.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_17">
+          <pose>-77.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_18">
+          <pose>-77.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_19">
+          <pose>-77.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_20">
+          <pose>-77.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_21">
+          <pose>-77.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_22">
+          <pose>-77.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_23">
+          <pose>-77.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_24">
+          <pose>-77.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_25">
+          <pose>-77.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_26">
+          <pose>-77.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_27">
+          <pose>-77.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_28">
+          <pose>-77.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_29">
+          <pose>-77.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_30">
+          <pose>-55.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_31">
+          <pose>-55.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_32">
+          <pose>-55.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_33">
+          <pose>-55.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_34">
+          <pose>-55.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_35">
+          <pose>-55.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_36">
+          <pose>-55.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_37">
+          <pose>-55.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_38">
+          <pose>-55.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_39">
+          <pose>-55.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_40">
+          <pose>-55.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_41">
+          <pose>-55.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_42">
+          <pose>-55.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_43">
+          <pose>-55.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_44">
+          <pose>-55.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_45">
+          <pose>-33.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_46">
+          <pose>-33.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_47">
+          <pose>-33.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_48">
+          <pose>-33.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_49">
+          <pose>-33.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_50">
+          <pose>-33.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_51">
+          <pose>-33.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_52">
+          <pose>-33.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_53">
+          <pose>-33.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_54">
+          <pose>-33.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_55">
+          <pose>-33.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_56">
+          <pose>-33.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_57">
+          <pose>-33.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_58">
+          <pose>-33.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_59">
+          <pose>-33.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_60">
+          <pose>-11.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_61">
+          <pose>-11.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_62">
+          <pose>-11.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_63">
+          <pose>-11.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_64">
+          <pose>-11.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_65">
+          <pose>-11.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_66">
+          <pose>-11.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_67">
+          <pose>-11.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_68">
+          <pose>-11.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_69">
+          <pose>-11.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_70">
+          <pose>-11.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_71">
+          <pose>-11.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_72">
+          <pose>-11.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_73">
+          <pose>-11.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_74">
+          <pose>-11.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_75">
+          <pose>11.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_76">
+          <pose>11.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_77">
+          <pose>11.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_78">
+          <pose>11.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_79">
+          <pose>11.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_80">
+          <pose>11.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_81">
+          <pose>11.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_82">
+          <pose>11.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_83">
+          <pose>11.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_84">
+          <pose>11.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_85">
+          <pose>11.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_86">
+          <pose>11.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_87">
+          <pose>11.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_88">
+          <pose>11.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_89">
+          <pose>11.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_90">
+          <pose>33.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_91">
+          <pose>33.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_92">
+          <pose>33.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_93">
+          <pose>33.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_94">
+          <pose>33.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_95">
+          <pose>33.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_96">
+          <pose>33.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_97">
+          <pose>33.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_98">
+          <pose>33.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_99">
+          <pose>33.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_100">
+          <pose>33.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_101">
+          <pose>33.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_102">
+          <pose>33.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_103">
+          <pose>33.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_104">
+          <pose>33.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_105">
+          <pose>55.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_106">
+          <pose>55.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_107">
+          <pose>55.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_108">
+          <pose>55.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_109">
+          <pose>55.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_110">
+          <pose>55.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_111">
+          <pose>55.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_112">
+          <pose>55.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_113">
+          <pose>55.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_114">
+          <pose>55.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_115">
+          <pose>55.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_116">
+          <pose>55.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_117">
+          <pose>55.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_118">
+          <pose>55.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_119">
+          <pose>55.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_120">
+          <pose>77.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_121">
+          <pose>77.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_122">
+          <pose>77.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_123">
+          <pose>77.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_124">
+          <pose>77.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_125">
+          <pose>77.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_126">
+          <pose>77.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_127">
+          <pose>77.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_128">
+          <pose>77.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_129">
+          <pose>77.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_130">
+          <pose>77.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_131">
+          <pose>77.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_132">
+          <pose>77.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_133">
+          <pose>77.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_134">
+          <pose>77.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_135">
+          <pose>99.00 -135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_136">
+          <pose>99.00 -116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_137">
+          <pose>99.00 -96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_138">
+          <pose>99.00 -77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_139">
+          <pose>99.00 -58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_140">
+          <pose>99.00 -38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_141">
+          <pose>99.00 -19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_142">
+          <pose>99.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_143">
+          <pose>99.00 19.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_144">
+          <pose>99.00 38.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_145">
+          <pose>99.00 58.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_146">
+          <pose>99.00 77.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_147">
+          <pose>99.00 96.67 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_148">
+          <pose>99.00 116.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_149">
+          <pose>99.00 135.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.80 18.13 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <collision name="col_2">
           <geometry>
             <box><size>220 290 0.1</size></box>
           </geometry>
@@ -220,22 +1719,22 @@
     <model name="pematang_kiri_group">
       <static>true</static>
       <pose>-65 0 0.05 0 0 0</pose>
-      <link name="row_01"><visual name="v"><pose>0 -135 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_02"><visual name="v"><pose>0 -117 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_03"><visual name="v"><pose>0 -99 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_04"><visual name="v"><pose>0 -81 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_05"><visual name="v"><pose>0 -63 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_06"><visual name="v"><pose>0 -45 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_07"><visual name="v"><pose>0 -27 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_08"><visual name="v"><pose>0  -9 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_09"><visual name="v"><pose>0   9 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_10"><visual name="v"><pose>0  27 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_11"><visual name="v"><pose>0  45 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_12"><visual name="v"><pose>0  63 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_13"><visual name="v"><pose>0  81 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_14"><visual name="v"><pose>0  99 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_15"><visual name="v"><pose>0 117 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="row_16"><visual name="v"><pose>0 135 0.075 0 0 0</pose><geometry><box><size>218 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_01"><visual name="v"><pose>0 -135 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_02"><visual name="v"><pose>0 -117 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_03"><visual name="v"><pose>0 -99 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_04"><visual name="v"><pose>0 -81 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_05"><visual name="v"><pose>0 -63 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_06"><visual name="v"><pose>0 -45 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_07"><visual name="v"><pose>0 -27 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_08"><visual name="v"><pose>0  -9 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_09"><visual name="v"><pose>0   9 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_10"><visual name="v"><pose>0  27 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_11"><visual name="v"><pose>0  45 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_12"><visual name="v"><pose>0  63 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_13"><visual name="v"><pose>0  81 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_14"><visual name="v"><pose>0  99 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_15"><visual name="v"><pose>0 117 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="row_16"><visual name="v"><pose>0 135 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
     </model>
 
     <!-- Air genangan sawah kiri (water layer, semi-transparent) -->
@@ -266,16 +1765,1096 @@
       <static>true</static>
       <pose>185 0 0 0 0 0</pose>
       <link name="link">
-        <visual name="soil">
+        <visual name="soil_base">
           <geometry>
-            <box><size>280 175 0.1</size></box>
+            <box><size>280.00 175.00 0.10</size></box>
           </geometry>
           <material>
-            <ambient>0.22 0.30 0.15 1</ambient>
-            <diffuse>0.28 0.42 0.18 1</diffuse>
+            <ambient>0.35 0.25 0.15 1</ambient>
+            <diffuse>0.45 0.32 0.20 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <visual name="plot_0">
+          <pose>-128.33 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_1">
+          <pose>-128.33 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_2">
+          <pose>-128.33 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_3">
+          <pose>-128.33 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_4">
+          <pose>-128.33 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_5">
+          <pose>-128.33 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_6">
+          <pose>-128.33 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_7">
+          <pose>-128.33 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_8">
+          <pose>-128.33 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_9">
+          <pose>-105.00 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_10">
+          <pose>-105.00 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_11">
+          <pose>-105.00 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_12">
+          <pose>-105.00 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_13">
+          <pose>-105.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_14">
+          <pose>-105.00 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_15">
+          <pose>-105.00 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_16">
+          <pose>-105.00 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_17">
+          <pose>-105.00 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_18">
+          <pose>-81.67 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_19">
+          <pose>-81.67 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_20">
+          <pose>-81.67 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_21">
+          <pose>-81.67 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_22">
+          <pose>-81.67 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_23">
+          <pose>-81.67 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_24">
+          <pose>-81.67 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_25">
+          <pose>-81.67 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_26">
+          <pose>-81.67 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_27">
+          <pose>-58.33 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_28">
+          <pose>-58.33 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_29">
+          <pose>-58.33 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_30">
+          <pose>-58.33 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_31">
+          <pose>-58.33 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_32">
+          <pose>-58.33 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_33">
+          <pose>-58.33 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_34">
+          <pose>-58.33 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_35">
+          <pose>-58.33 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_36">
+          <pose>-35.00 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_37">
+          <pose>-35.00 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_38">
+          <pose>-35.00 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_39">
+          <pose>-35.00 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_40">
+          <pose>-35.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_41">
+          <pose>-35.00 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_42">
+          <pose>-35.00 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_43">
+          <pose>-35.00 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_44">
+          <pose>-35.00 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_45">
+          <pose>-11.67 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_46">
+          <pose>-11.67 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_47">
+          <pose>-11.67 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_48">
+          <pose>-11.67 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_49">
+          <pose>-11.67 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_50">
+          <pose>-11.67 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_51">
+          <pose>-11.67 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_52">
+          <pose>-11.67 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_53">
+          <pose>-11.67 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_54">
+          <pose>11.67 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_55">
+          <pose>11.67 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_56">
+          <pose>11.67 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_57">
+          <pose>11.67 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_58">
+          <pose>11.67 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_59">
+          <pose>11.67 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_60">
+          <pose>11.67 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_61">
+          <pose>11.67 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_62">
+          <pose>11.67 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_63">
+          <pose>35.00 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_64">
+          <pose>35.00 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_65">
+          <pose>35.00 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_66">
+          <pose>35.00 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_67">
+          <pose>35.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_68">
+          <pose>35.00 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_69">
+          <pose>35.00 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_70">
+          <pose>35.00 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_71">
+          <pose>35.00 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_72">
+          <pose>58.33 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_73">
+          <pose>58.33 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_74">
+          <pose>58.33 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_75">
+          <pose>58.33 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_76">
+          <pose>58.33 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_77">
+          <pose>58.33 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_78">
+          <pose>58.33 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_79">
+          <pose>58.33 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_80">
+          <pose>58.33 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_81">
+          <pose>81.67 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_82">
+          <pose>81.67 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_83">
+          <pose>81.67 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_84">
+          <pose>81.67 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_85">
+          <pose>81.67 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_86">
+          <pose>81.67 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_87">
+          <pose>81.67 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_88">
+          <pose>81.67 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_89">
+          <pose>81.67 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_90">
+          <pose>105.00 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_91">
+          <pose>105.00 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_92">
+          <pose>105.00 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_93">
+          <pose>105.00 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_94">
+          <pose>105.00 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_95">
+          <pose>105.00 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_96">
+          <pose>105.00 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_97">
+          <pose>105.00 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_98">
+          <pose>105.00 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_99">
+          <pose>128.33 -77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_100">
+          <pose>128.33 -58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_101">
+          <pose>128.33 -38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_102">
+          <pose>128.33 -19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_103">
+          <pose>128.33 0.00 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_104">
+          <pose>128.33 19.44 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_105">
+          <pose>128.33 38.89 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_106">
+          <pose>128.33 58.33 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_107">
+          <pose>128.33 77.78 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 18.24 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <collision name="col_3">
           <geometry>
             <box><size>280 175 0.1</size></box>
           </geometry>
@@ -287,15 +2866,15 @@
     <model name="pematang_kanan_atas">
       <static>true</static>
       <pose>185 0 0.05 0 0 0</pose>
-      <link name="r1"><visual name="v"><pose>0 -72 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r2"><visual name="v"><pose>0 -54 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r3"><visual name="v"><pose>0 -36 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r4"><visual name="v"><pose>0 -18 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r5"><visual name="v"><pose>0   0 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r6"><visual name="v"><pose>0  18 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r7"><visual name="v"><pose>0  36 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r8"><visual name="v"><pose>0  54 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r9"><visual name="v"><pose>0  72 0.075 0 0 0</pose><geometry><box><size>278 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r1"><visual name="v"><pose>0 -72 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r2"><visual name="v"><pose>0 -54 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r3"><visual name="v"><pose>0 -36 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r4"><visual name="v"><pose>0 -18 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r5"><visual name="v"><pose>0   0 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r6"><visual name="v"><pose>0  18 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r7"><visual name="v"><pose>0  36 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r8"><visual name="v"><pose>0  54 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r9"><visual name="v"><pose>0  72 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
     </model>
 
     <!-- Air genangan sawah kanan atas -->
@@ -326,16 +2905,496 @@
       <static>true</static>
       <pose>130 -144 0 0 0 0</pose>
       <link name="link">
-        <visual name="soil">
+        <visual name="soil_base">
           <geometry>
-            <box><size>170 115 0.1</size></box>
+            <box><size>170.00 115.00 0.10</size></box>
           </geometry>
           <material>
-            <ambient>0.22 0.30 0.15 1</ambient>
-            <diffuse>0.28 0.42 0.18 1</diffuse>
+            <ambient>0.35 0.25 0.15 1</ambient>
+            <diffuse>0.45 0.32 0.20 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <visual name="plot_0">
+          <pose>-74.38 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_1">
+          <pose>-74.38 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_2">
+          <pose>-74.38 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_3">
+          <pose>-74.38 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_4">
+          <pose>-74.38 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_5">
+          <pose>-74.38 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_6">
+          <pose>-53.12 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_7">
+          <pose>-53.12 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_8">
+          <pose>-53.12 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_9">
+          <pose>-53.12 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_10">
+          <pose>-53.12 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_11">
+          <pose>-53.12 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_12">
+          <pose>-31.88 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_13">
+          <pose>-31.88 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_14">
+          <pose>-31.88 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_15">
+          <pose>-31.88 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_16">
+          <pose>-31.88 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_17">
+          <pose>-31.88 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_18">
+          <pose>-10.62 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_19">
+          <pose>-10.62 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_20">
+          <pose>-10.62 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_21">
+          <pose>-10.62 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_22">
+          <pose>-10.62 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_23">
+          <pose>-10.62 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_24">
+          <pose>10.62 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_25">
+          <pose>10.62 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_26">
+          <pose>10.62 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_27">
+          <pose>10.62 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_28">
+          <pose>10.62 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_29">
+          <pose>10.62 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_30">
+          <pose>31.88 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_31">
+          <pose>31.88 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_32">
+          <pose>31.88 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_33">
+          <pose>31.88 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_34">
+          <pose>31.88 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_35">
+          <pose>31.88 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_36">
+          <pose>53.12 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_37">
+          <pose>53.12 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_38">
+          <pose>53.12 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_39">
+          <pose>53.12 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_40">
+          <pose>53.12 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_41">
+          <pose>53.12 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_42">
+          <pose>74.38 -47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_43">
+          <pose>74.38 -28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_44">
+          <pose>74.38 -9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_45">
+          <pose>74.38 9.58 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_46">
+          <pose>74.38 28.75 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_47">
+          <pose>74.38 47.92 0.060 0 0 0</pose>
+          <geometry>
+            <box><size>20.05 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <collision name="col_4">
           <geometry>
             <box><size>170 115 0.1</size></box>
           </geometry>
@@ -347,12 +3406,12 @@
     <model name="pematang_tengah_bawah">
       <static>true</static>
       <pose>130 -144 0.05 0 0 0</pose>
-      <link name="r1"><visual name="v"><pose>0 -45 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r2"><visual name="v"><pose>0 -27 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r3"><visual name="v"><pose>0  -9 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r4"><visual name="v"><pose>0   9 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r5"><visual name="v"><pose>0  27 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
-      <link name="r6"><visual name="v"><pose>0  45 0.075 0 0 0</pose><geometry><box><size>168 0.4 0.15</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r1"><visual name="v"><pose>0 -45 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r2"><visual name="v"><pose>0 -27 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r3"><visual name="v"><pose>0  -9 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r4"><visual name="v"><pose>0   9 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r5"><visual name="v"><pose>0  27 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
+      <link name="r6"><visual name="v"><pose>0  45 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.30 0.40 0.20 1</ambient><diffuse>0.35 0.50 0.25 1</diffuse></material></visual></link>
     </model>
 
     <!-- ======================================================
@@ -367,16 +3426,376 @@
       <static>true</static>
       <pose>285 -144 -1.5 0 0 0</pose>
       <link name="link">
-        <visual name="soil">
+        <visual name="soil_base">
           <geometry>
-            <box><size>140 115 0.3</size></box>
+            <box><size>140.00 115.00 0.30</size></box>
           </geometry>
           <material>
-            <ambient>0.18 0.26 0.12 1</ambient>
-            <diffuse>0.22 0.34 0.15 1</diffuse>
+            <ambient>0.35 0.25 0.15 1</ambient>
+            <diffuse>0.45 0.32 0.20 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <visual name="plot_0">
+          <pose>-58.33 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_1">
+          <pose>-58.33 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_2">
+          <pose>-58.33 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_3">
+          <pose>-58.33 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_4">
+          <pose>-58.33 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_5">
+          <pose>-58.33 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_6">
+          <pose>-35.00 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_7">
+          <pose>-35.00 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_8">
+          <pose>-35.00 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_9">
+          <pose>-35.00 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_10">
+          <pose>-35.00 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_11">
+          <pose>-35.00 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_12">
+          <pose>-11.67 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_13">
+          <pose>-11.67 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_14">
+          <pose>-11.67 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_15">
+          <pose>-11.67 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_16">
+          <pose>-11.67 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_17">
+          <pose>-11.67 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_18">
+          <pose>11.67 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_19">
+          <pose>11.67 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_20">
+          <pose>11.67 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_21">
+          <pose>11.67 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_22">
+          <pose>11.67 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_23">
+          <pose>11.67 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_24">
+          <pose>35.00 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_25">
+          <pose>35.00 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_26">
+          <pose>35.00 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_27">
+          <pose>35.00 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_28">
+          <pose>35.00 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_29">
+          <pose>35.00 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_30">
+          <pose>58.33 -47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_31">
+          <pose>58.33 -28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_32">
+          <pose>58.33 -9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_33">
+          <pose>58.33 9.58 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_34">
+          <pose>58.33 28.75 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <visual name="plot_35">
+          <pose>58.33 47.92 0.160 0 0 0</pose>
+          <geometry>
+            <box><size>22.13 17.97 0.02</size></box>
+          </geometry>
+          <material>
+            <ambient>0.20 0.50 0.15 1</ambient>
+            <diffuse>0.30 0.70 0.22 1</diffuse>
+          </material>
+        </visual>
+        <collision name="col_5">
           <geometry>
             <box><size>140 115 0.3</size></box>
           </geometry>
@@ -399,7 +3818,7 @@
             <diffuse>0.38 0.36 0.25 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <collision name="col_6">
           <geometry>
             <box><size>12 115 0.1</size></box>
           </geometry>
@@ -421,7 +3840,7 @@
             <diffuse>0.38 0.36 0.25 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <collision name="col_7">
           <geometry>
             <box><size>140 12 0.1</size></box>
           </geometry>
@@ -433,11 +3852,11 @@
     <model name="pematang_biru">
       <static>true</static>
       <pose>285 -144 -1.45 0 0 0</pose>
-      <link name="r1"><visual name="v"><pose>0 -40 0.075 0 0 0</pose><geometry><box><size>138 0.4 0.15</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
-      <link name="r2"><visual name="v"><pose>0 -20 0.075 0 0 0</pose><geometry><box><size>138 0.4 0.15</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
-      <link name="r3"><visual name="v"><pose>0   0 0.075 0 0 0</pose><geometry><box><size>138 0.4 0.15</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
-      <link name="r4"><visual name="v"><pose>0  20 0.075 0 0 0</pose><geometry><box><size>138 0.4 0.15</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
-      <link name="r5"><visual name="v"><pose>0  40 0.075 0 0 0</pose><geometry><box><size>138 0.4 0.15</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
+      <link name="r1"><visual name="v"><pose>0 -40 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
+      <link name="r2"><visual name="v"><pose>0 -20 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
+      <link name="r3"><visual name="v"><pose>0   0 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
+      <link name="r4"><visual name="v"><pose>0  20 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
+      <link name="r5"><visual name="v"><pose>0  40 0.075 0 0 0</pose><geometry><box><size>0 0 0</size></box></geometry><material><ambient>0.25 0.35 0.15 1</ambient><diffuse>0.30 0.45 0.20 1</diffuse></material></visual></link>
     </model>
 
     <!-- Air genangan zona biru -->
@@ -478,7 +3897,7 @@
             <specular>0.60 0.60 0.60 1</specular>
           </material>
         </visual>
-        <collision name="col">
+        <collision name="col_8">
           <geometry>
             <box><size>1.2 290 0.3</size></box>
           </geometry>
@@ -501,7 +3920,7 @@
             <specular>0.60 0.60 0.60 1</specular>
           </material>
         </visual>
-        <collision name="col">
+        <collision name="col_9">
           <geometry>
             <box><size>340 1.2 0.3</size></box>
           </geometry>
@@ -523,7 +3942,7 @@
             <diffuse>0.08 0.22 0.45 1</diffuse>
           </material>
         </visual>
-        <collision name="col">
+        <collision name="col_10">
           <geometry>
             <box><size>142 1.2 0.3</size></box>
           </geometry>
@@ -534,183 +3953,62 @@
     <!-- ======================================================
          JL. ARUMAN — Road model (batas utara lahan)
     ====================================================== -->
-    <model name="jalan_aruman">
-      <static>true</static>
-      <pose>185 145 0.05 0 0 0</pose>
-      <link name="link">
-        <visual name="road_surface">
-          <geometry>
-            <box><size>500 8 0.1</size></box>
-          </geometry>
-          <material>
-            <ambient>0.22 0.20 0.18 1</ambient>
-            <diffuse>0.28 0.26 0.22 1</diffuse>
-          </material>
-        </visual>
-        <collision name="col">
-          <geometry>
-            <box><size>500 8 0.1</size></box>
-          </geometry>
-        </collision>
-        <!-- Marka jalan tengah -->
-        <visual name="center_line">
-          <pose>0 0 0.06 0 0 0</pose>
-          <geometry>
-            <box><size>498 0.2 0.01</size></box>
-          </geometry>
-          <material>
-            <ambient>0.95 0.90 0.20 1</ambient>
-            <diffuse>0.95 0.90 0.20 1</diffuse>
-          </material>
-        </visual>
-      </link>
-    </model>
+    
 
     <!-- Trotoar / shoulder kiri jalan -->
-    <model name="trotoar_kiri">
-      <static>true</static>
-      <pose>185 149 0.08 0 0 0</pose>
-      <link name="link">
-        <visual name="v">
-          <geometry>
-            <box><size>500 2.5 0.16</size></box>
-          </geometry>
-          <material>
-            <ambient>0.55 0.52 0.48 1</ambient>
-            <diffuse>0.60 0.57 0.53 1</diffuse>
-          </material>
-        </visual>
-        <collision name="col">
-          <geometry>
-            <box><size>500 2.5 0.16</size></box>
-          </geometry>
-        </collision>
-      </link>
-    </model>
+    
 
     <!-- ======================================================
          POHON / TREES — distributed around field boundaries
     ====================================================== -->
     <!-- Pohon di sepanjang Jl. Aruman (sisi selatan jalan) -->
-    <model name="pohon_01"><static>true</static><pose>-150 138 0 0 0 0</pose>
-      <link name="trunk"><visual name="v"><geometry><cylinder><radius>0.3</radius><length>5</length></cylinder></geometry><material><ambient>0.35 0.25 0.15 1</ambient><diffuse>0.40 0.30 0.18 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.3</radius><length>5</length></cylinder></geometry></collision></link>
-      <link name="canopy"><visual name="v"><pose>0 0 4.5 0 0 0</pose><geometry><sphere><radius>4</radius></sphere></geometry><material><ambient>0.12 0.35 0.08 0.9</ambient><diffuse>0.15 0.45 0.10 0.9</diffuse></material></visual><collision name="c"><pose>0 0 4.5 0 0 0</pose><geometry><sphere><radius>4</radius></sphere></geometry></collision></link>
-    </model>
-    <model name="pohon_02"><static>true</static><pose>-80 138 0 0 0 0</pose>
-      <link name="trunk"><visual name="v"><geometry><cylinder><radius>0.25</radius><length>4.5</length></cylinder></geometry><material><ambient>0.35 0.25 0.15 1</ambient><diffuse>0.40 0.30 0.18 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.25</radius><length>4.5</length></cylinder></geometry></collision></link>
-      <link name="canopy"><visual name="v"><pose>0 0 4.0 0 0 0</pose><geometry><sphere><radius>3.5</radius></sphere></geometry><material><ambient>0.12 0.35 0.08 0.9</ambient><diffuse>0.15 0.45 0.10 0.9</diffuse></material></visual><collision name="c"><pose>0 0 4.0 0 0 0</pose><geometry><sphere><radius>3.5</radius></sphere></geometry></collision></link>
-    </model>
-    <model name="pohon_03"><static>true</static><pose>50 138 0 0 0 0</pose>
-      <link name="trunk"><visual name="v"><geometry><cylinder><radius>0.3</radius><length>6</length></cylinder></geometry><material><ambient>0.35 0.25 0.15 1</ambient><diffuse>0.40 0.30 0.18 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.3</radius><length>6</length></cylinder></geometry></collision></link>
-      <link name="canopy"><visual name="v"><pose>0 0 5 0 0 0</pose><geometry><sphere><radius>5</radius></sphere></geometry><material><ambient>0.12 0.35 0.08 0.9</ambient><diffuse>0.15 0.45 0.10 0.9</diffuse></material></visual><collision name="c"><pose>0 0 5 0 0 0</pose><geometry><sphere><radius>5</radius></sphere></geometry></collision></link>
-    </model>
-    <model name="pohon_04"><static>true</static><pose>160 138 0 0 0 0</pose>
-      <link name="trunk"><visual name="v"><geometry><cylinder><radius>0.28</radius><length>5.5</length></cylinder></geometry><material><ambient>0.35 0.25 0.15 1</ambient><diffuse>0.40 0.30 0.18 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.28</radius><length>5.5</length></cylinder></geometry></collision></link>
-      <link name="canopy"><visual name="v"><pose>0 0 4.8 0 0 0</pose><geometry><sphere><radius>4.2</radius></sphere></geometry><material><ambient>0.12 0.35 0.08 0.9</ambient><diffuse>0.15 0.45 0.10 0.9</diffuse></material></visual><collision name="c"><pose>0 0 4.8 0 0 0</pose><geometry><sphere><radius>4.2</radius></sphere></geometry></collision></link>
-    </model>
-    <model name="pohon_05"><static>true</static><pose>300 138 0 0 0 0</pose>
-      <link name="trunk"><visual name="v"><geometry><cylinder><radius>0.32</radius><length>6.5</length></cylinder></geometry><material><ambient>0.35 0.25 0.15 1</ambient><diffuse>0.40 0.30 0.18 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.32</radius><length>6.5</length></cylinder></geometry></collision></link>
-      <link name="canopy"><visual name="v"><pose>0 0 5.5 0 0 0</pose><geometry><sphere><radius>5</radius></sphere></geometry><material><ambient>0.12 0.35 0.08 0.9</ambient><diffuse>0.15 0.45 0.10 0.9</diffuse></material></visual><collision name="c"><pose>0 0 5.5 0 0 0</pose><geometry><sphere><radius>5</radius></sphere></geometry></collision></link>
-    </model>
+    
+    
+    
+    
+    
 
-<model name="pohon_tengah_obstacle_1">
-      <static>true</static>
-      <pose>0 0 0 0 0 0</pose>
-      <link name="trunk">
-        <pose>0 0 3.5 0 0 0</pose>
-        <visual name="trunk_visual">
-          <geometry><cylinder><radius>0.75</radius><length>7.0</length></cylinder></geometry>
-          <material><ambient>0.30 0.20 0.10 1</ambient><diffuse>0.38 0.25 0.13 1</diffuse></material>
-        </visual>
-        <collision name="trunk_collision">
-          <geometry><cylinder><radius>0.9</radius><length>7.0</length></cylinder></geometry>
-        </collision>
-      </link>
-      <link name="canopy">
-        <pose>0 0 8.5 0 0 0</pose>
-        <visual name="canopy_visual">
-          <geometry><sphere><radius>7.0</radius></sphere></geometry>
-          <material><ambient>0.06 0.28 0.10 0.95</ambient><diffuse>0.10 0.42 0.14 0.95</diffuse></material>
-        </visual>
-        <collision name="canopy_collision">
-          <geometry><sphere><radius>7.5</radius></sphere></geometry>
-        </collision>
-      </link>
-    </model>
 
-    <model name="pohon_tengah_obstacle_2">
-      <static>true</static>
-      <pose>8 -14 0 0 0 0.25</pose>
-      <link name="trunk">
-        <pose>0 0 3.5 0 0 0</pose>
-        <visual name="trunk_visual">
-          <geometry><cylinder><radius>0.75</radius><length>7.0</length></cylinder></geometry>
-          <material><ambient>0.30 0.20 0.10 1</ambient><diffuse>0.38 0.25 0.13 1</diffuse></material>
-        </visual>
-        <collision name="trunk_collision">
-          <geometry><cylinder><radius>0.9</radius><length>7.0</length></cylinder></geometry>
-        </collision>
-      </link>
-      <link name="canopy">
-        <pose>0 0 8.5 0 0 0</pose>
-        <visual name="canopy_visual">
-          <geometry><sphere><radius>7.0</radius></sphere></geometry>
-          <material><ambient>0.06 0.28 0.10 0.95</ambient><diffuse>0.10 0.42 0.14 0.95</diffuse></material>
-        </visual>
-        <collision name="canopy_collision">
-          <geometry><sphere><radius>7.5</radius></sphere></geometry>
-        </collision>
-      </link>
-    </model>
+
+    
 
     <!-- ======================================================
          MASJID PLACEHOLDER (Masjid Al-Maidah reference)
          Hanya sebagai landmark untuk referensi navigasi
     ====================================================== -->
-    <model name="masjid_landmark">
-      <static>true</static>
-      <pose>340 125 0 0 0 0</pose>
-      <link name="bangunan">
-        <visual name="v">
-          <geometry>
-            <box><size>20 18 8</size></box>
-          </geometry>
-          <material>
-            <ambient>0.90 0.88 0.80 1</ambient>
-            <diffuse>0.92 0.90 0.82 1</diffuse>
-          </material>
-        </visual>
-        <collision name="col">
-          <geometry>
-            <box><size>20 18 8</size></box>
-          </geometry>
-        </collision>
-      </link>
-      <!-- Kubah -->
-      <link name="kubah">
-        <pose>340 125 8 0 0 0</pose>
-        <visual name="v">
-          <geometry>
-            <sphere><radius>5</radius></sphere>
-          </geometry>
-          <material>
-            <ambient>0.15 0.50 0.30 1</ambient>
-            <diffuse>0.18 0.60 0.35 1</diffuse>
-          </material>
-        </visual>
-        <collision name="col">
-          <geometry>
-            <sphere><radius>5</radius></sphere>
-          </geometry>
-        </collision>
-      </link>
-    </model>
+    
 
     <!-- ======================================================
          DRONE SPAWN POINT MARKER (visual only)
          Position: X=-65, Y=0, Z=2.0 (di atas sawah kiri)
          Sesuai setting di launch file
     ====================================================== -->
+    <!-- ======================================================
+         POHON KELAPA SAWIT (3 buah - Obstacle)
+    ====================================================== -->
+    
+    
+    
+
+    <!-- ======================================================
+         POHON KELAPA SAWIT ALIGNED (3 buah di Y = 0)
+    ====================================================== -->
+    <include>
+      <name>pohon_sawit_01</name>
+      <uri>model://oil_palm_tree</uri>
+      <pose>-40 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <name>pohon_sawit_02</name>
+      <uri>model://oil_palm_tree</uri>
+      <pose>-20 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <name>pohon_sawit_03</name>
+      <uri>model://oil_palm_tree</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
     <model name="spawn_marker">
       <static>true</static>
       <pose>-65 0 0.3 0 0 0</pose>

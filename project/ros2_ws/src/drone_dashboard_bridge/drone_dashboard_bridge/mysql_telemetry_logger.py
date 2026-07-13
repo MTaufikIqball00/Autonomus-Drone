@@ -47,23 +47,7 @@ def finite_or_none(value: Any) -> Optional[float]:
     return number if math.isfinite(number) else None
 
 
-def quaternion_to_euler(q: Any) -> Tuple[Optional[float], Optional[float], Optional[float]]:
-    x = finite_or_none(getattr(q, "x", None)) or 0.0
-    y = finite_or_none(getattr(q, "y", None)) or 0.0
-    z = finite_or_none(getattr(q, "z", None)) or 0.0
-    w = finite_or_none(getattr(q, "w", None)) or 1.0
-
-    sinr_cosp = 2.0 * (w * x + y * z)
-    cosr_cosp = 1.0 - 2.0 * (x * x + y * y)
-    roll = math.atan2(sinr_cosp, cosr_cosp)
-
-    sinp = 2.0 * (w * y - z * x)
-    pitch = math.copysign(math.pi / 2.0, sinp) if abs(sinp) >= 1.0 else math.asin(sinp)
-
-    siny_cosp = 2.0 * (w * z + x * y)
-    cosy_cosp = 1.0 - 2.0 * (y * y + z * z)
-    yaw = math.atan2(siny_cosp, cosy_cosp)
-    return roll, pitch, yaw
+from drone_dashboard_bridge.math_utils import quaternion_to_euler
 
 
 def heading_from_yaw(yaw: Optional[float]) -> Optional[float]:
@@ -182,11 +166,11 @@ class MySqlTelemetryLogger(Node):
         self.declare_parameter("db_name", os.getenv("DRONE_DB_NAME", "drone_ops"))
         self.declare_parameter("drone_id", int(os.getenv("DRONE_DB_DRONE_ID", "1")))
         self.declare_parameter("mission_id", int(os.getenv("DRONE_DB_MISSION_ID", "0")))
-        self.declare_parameter("telemetry_hz", float(os.getenv("DRONE_DB_TELEMETRY_HZ", "5.0")))
+        self.declare_parameter("telemetry_hz", float(os.getenv("DRONE_DB_TELEMETRY_HZ", "2.0")))
         self.declare_parameter("state_hz", float(os.getenv("DRONE_DB_STATE_HZ", "1.0")))
         self.declare_parameter("batch_size", int(os.getenv("DRONE_DB_BATCH_SIZE", "100")))
         self.declare_parameter("flush_period_sec", float(os.getenv("DRONE_DB_FLUSH_SEC", "1.0")))
-        self.declare_parameter("max_queue_size", int(os.getenv("DRONE_DB_MAX_QUEUE", "5000")))
+        self.declare_parameter("max_queue_size", int(os.getenv("DRONE_DB_MAX_QUEUE", "1000")))
 
         # Callback Groups
         self.fast_cb_group = MutuallyExclusiveCallbackGroup() # Untuk subscribe Odom berkecepatan tinggi
