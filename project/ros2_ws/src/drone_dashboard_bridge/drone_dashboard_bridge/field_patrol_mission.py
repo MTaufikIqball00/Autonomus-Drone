@@ -132,6 +132,8 @@ class FieldPatrolMission(Node):
         self.current_wp_idx = 0
         self.photo_counter  = 0
         self.waypoints: List[Waypoint] = []
+        # FIX BUG #2: state loiter non-blocking (pengganti time.sleep di callback)
+        self._loiter_until: Optional[float] = None
 
         # ── Generate mission waypoints ────────────────────────────────────────
         self.waypoints = self._generate_lawnmower_waypoints()
@@ -234,10 +236,13 @@ class FieldPatrolMission(Node):
             wp_count += 2
 
         # ── RTL — Return to Launch ─────────────────────────────────────────────
+        # FIX: sebelumnya x=self.altitude_trans (nilai ketinggian 20.0 terpakai
+        # sebagai koordinat X!) — typo copy-paste. Seharusnya climb dilakukan
+        # di tengah zona biru (posisi terakhir sweep) sebelum kembali ke spawn.
         wps.append(Waypoint(
-            x=self.altitude_trans,  # naik dulu
+            x=(self.ZONE_BLUE["x_min"] + self.ZONE_BLUE["x_max"]) / 2.0,
             y=(self.ZONE_BLUE["y_min"] + self.ZONE_BLUE["y_max"]) / 2.0,
-            z=self.altitude_trans,
+            z=self.altitude_trans,  # naik dulu
             label="RTL_CLIMB",
         ))
         wps.append(Waypoint(
@@ -302,6 +307,21 @@ class FieldPatrolMission(Node):
         goal.pose.orientation.w = 1.0
         self.pub_goal.publish(goal)
 
+        # FIX BUG #2: Loiter non-blocking. Sebelumnya time.sleep(loiter_sec)
+        # di dalam timer callback membekukan SELURUH node (odom_cb, gps_cb,
+        # semua publisher) selama 3-5 detik pada single-threaded executor.
+        # Sekarang loiter dilakukan sebagai state: callback tetap return cepat
+        # dan node terus menerima feedback odometry selama menunggu.
+        if self._loiter_until is not None:
+            if time.monotonic() < self._loiter_until:
+                self._publish_status(f"LOITERING:{wp.label}:{self.current_wp_idx+1}/{len(self.waypoints)}")
+                return  # masih loiter — goal terakhir tetap dipegang drone
+            # Loiter selesai — lanjut ke waypoint berikutnya
+            self._loiter_until = None
+            self.get_logger().info(f"  WP reached: [{wp.label}] ({self.current_wp_idx+1}/{len(self.waypoints)})")
+            self.current_wp_idx += 1
+            return
+
         self._publish_status(f"NAVIGATING:{wp.label}:{self.current_wp_idx+1}/{len(self.waypoints)}")
 
         # Cek apakah sudah sampai (hanya berdasarkan pose jika tersedia)
@@ -309,7 +329,9 @@ class FieldPatrolMission(Node):
             if wp.take_photo:
                 self._trigger_camera()
             if wp.loiter_sec > 0:
-                time.sleep(wp.loiter_sec)
+                # Mulai loiter non-blocking; increment wp_idx ditunda sampai selesai
+                self._loiter_until = time.monotonic() + wp.loiter_sec
+                return
             self.get_logger().info(f"  WP reached: [{wp.label}] ({self.current_wp_idx+1}/{len(self.waypoints)})")
             self.current_wp_idx += 1
 
@@ -352,10 +374,12 @@ class FieldPatrolMission(Node):
     def start_mission(self) -> None:
         self.mission_active = True
         self.current_wp_idx = 0
+        self._loiter_until = None  # FIX BUG #2: reset state loiter
         self.get_logger().info("Mission STARTED")
 
     def abort_mission(self) -> None:
         self.mission_active = False
+        self._loiter_until = None  # FIX BUG #2: reset state loiter
         # Hover in place
         self.pub_cmd_vel.publish(Twist())
         self.get_logger().warn("Mission ABORTED — drone hovering")

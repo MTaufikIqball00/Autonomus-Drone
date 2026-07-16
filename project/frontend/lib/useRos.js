@@ -48,6 +48,8 @@ export function useRos(url = DEFAULT_URL) {
   const [metrics, setMetrics] = useState({});
 
   const prevModeRef = useRef("idle");
+  const [currentMissionId, setCurrentMissionId] = useState(null);
+  const prevJourneyStatus = useRef(null);
 
   // Hapus draft rute ketika misi selesai atau dibatalkan (emergency stop)
   useEffect(() => {
@@ -55,6 +57,10 @@ export function useRos(url = DEFAULT_URL) {
     if ((prevModeRef.current === "auto" || prevModeRef.current === "takeoff") && 
         (currentMode === "hold" || currentMode === "idle" || currentMode === "manual")) {
       setPathDraft({ start: null, end: null });
+    }
+    if (currentMode === "idle" || currentMode === "manual") {
+      setCurrentMissionId(null);
+      prevJourneyStatus.current = null;
     }
     prevModeRef.current = currentMode;
   }, [dashboardState.mode]);
@@ -296,6 +302,101 @@ export function useRos(url = DEFAULT_URL) {
     return (Date.now() - lastOdomTime.current) < 3000;
   }, []);
 
+  const publishActiveMission = useCallback((missionId) => {
+    const ros = rosRef.current;
+    if (!ros || !connected) return;
+    const topic = new ROSLIB.Topic({
+      ros,
+      name: "/dashboard/active_mission",
+      messageType: "std_msgs/msg/String"
+    });
+    topic.publish(new ROSLIB.Message({ data: JSON.stringify({ mission_id: Number(missionId) }) }));
+    console.log("[useRos] Active mission ID published to ROS:", missionId);
+  }, [connected]);
+
+  const updateMissionInDb = useCallback(async (fields) => {
+    try {
+      const res = await fetch("/api/missions", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_API_WRITE_KEY || "change-this-api-key"
+        },
+        body: JSON.stringify(fields)
+      });
+      const data = await res.json();
+      console.log("[useRos] Mission diupdate di DB:", fields, data);
+    } catch (err) {
+      console.error("[useRos] updateMissionInDb error:", err);
+    }
+  }, []);
+
+  const createMission = useCallback(async (start, target) => {
+    try {
+      const res = await fetch("/api/missions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_API_WRITE_KEY || "change-this-api-key"
+        },
+        body: JSON.stringify({
+          droneId: 1,
+          missionName: `Auto Mission ${new Date().toLocaleTimeString("id-ID")}`,
+          mode: "auto",
+          status: "in_progress",
+          start: { x: start.x, y: start.y, z: start.z },
+          target: { x: target.x, y: target.y, z: target.z },
+          startedAt: new Date().toISOString(),
+          pathPlanningResult: { startAuto: true, startSource: "drone_realtime_odom" }
+        })
+      });
+      const data = await res.json();
+      console.log("[useRos] Mission dibuat:", data);
+      if (data && data.id) {
+        setCurrentMissionId(data.id);
+        publishActiveMission(data.id);
+      }
+      return data;
+    } catch (err) {
+      console.error("[useRos] createMission error:", err);
+    }
+  }, [publishActiveMission]);
+
+  // Effect to handle RTH database updates on state transitions
+  useEffect(() => {
+    const journey = dashboardState.journey_status;
+    const rthMeta = dashboardState.rth_metadata || {};
+    if (!currentMissionId || !journey) return;
+
+    if (journey !== prevJourneyStatus.current) {
+      console.log(`[useRos] Journey status transition: ${prevJourneyStatus.current} -> ${journey}`);
+
+      if (journey === "Mission Completed - Waiting 5 Seconds") {
+        updateMissionInDb({
+          id: currentMissionId,
+          arrival_time: rthMeta.arrival_time || new Date().toISOString()
+        });
+      } else if (journey === "Returning to Home") {
+        updateMissionInDb({
+          id: currentMissionId,
+          rth_start_time: rthMeta.rth_start_time || new Date().toISOString()
+        });
+      } else if (journey === "Completed" && prevJourneyStatus.current === "Landing") {
+        updateMissionInDb({
+          id: currentMissionId,
+          status: "completed",
+          landing_time: rthMeta.landing_time || new Date().toISOString(),
+          end_time: rthMeta.landing_time || new Date().toISOString(),
+          total_distance_m: rthMeta.total_distance_m || 0,
+          battery_used_percent: rthMeta.battery_used_percent || 0,
+          total_duration_sec: rthMeta.total_duration_sec || 0
+        });
+        setCurrentMissionId(null);
+      }
+      prevJourneyStatus.current = journey;
+    }
+  }, [dashboardState.journey_status, currentMissionId, dashboardState.rth_metadata, updateMissionInDb]);
+
   const publishGoal = useCallback((x, y, z = 0, frame = "map") => {
     const topic = topicsRef.current.goalPose;
     if (!topic) return;
@@ -333,34 +434,7 @@ export function useRos(url = DEFAULT_URL) {
     createMission(dronePos, nextGoal).catch((err) =>
       console.error("[useRos] Gagal membuat mission:", err)
     );
-  }, []);
-
-  async function createMission(start, target) {
-    try {
-      const res = await fetch("/api/missions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_API_WRITE_KEY || "change-this-api-key"
-        },
-        body: JSON.stringify({
-          droneId: 1,
-          missionName: `Auto Mission ${new Date().toLocaleTimeString("id-ID")}`,
-          mode: "auto",
-          status: "in_progress",
-          start: { x: start.x, y: start.y, z: start.z },
-          target: { x: target.x, y: target.y, z: target.z },
-          startedAt: new Date().toISOString(),
-          pathPlanningResult: { startAuto: true, startSource: "drone_realtime_odom" }
-        })
-      });
-      const data = await res.json();
-      console.log("[useRos] Mission dibuat:", data);
-      return data;
-    } catch (err) {
-      console.error("[useRos] createMission error:", err);
-    }
-  }
+  }, [createMission]);
 
   const clearTrail = useCallback(() => {
     setTrail([]);

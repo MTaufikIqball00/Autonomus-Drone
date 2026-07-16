@@ -148,6 +148,37 @@ export default function ControlPanel({
           <h2>Flight Control</h2>
           <span className="status-pill">{vehicle.navStateName || state?.mode || "waiting"}</span>
         </div>
+
+        {state?.journey_status && state.journey_status !== "Idle" && (
+          <div style={{
+            margin: "12px 0",
+            padding: "12px",
+            borderRadius: "8px",
+            background: state.journey_status.includes("Waiting") ? "rgba(234, 179, 8, 0.15)" :
+                        state.journey_status.includes("Returning") ? "rgba(236, 72, 153, 0.15)" :
+                        state.journey_status.includes("Landing") ? "rgba(249, 115, 22, 0.15)" :
+                        state.journey_status === "Completed" ? "rgba(16, 185, 129, 0.15)" : "rgba(59, 130, 246, 0.15)",
+            border: `1.5px solid ${
+                        state.journey_status.includes("Waiting") ? "#eab308" :
+                        state.journey_status.includes("Returning") ? "#ec4899" :
+                        state.journey_status.includes("Landing") ? "#f97316" :
+                        state.journey_status === "Completed" ? "#10b981" : "#3b82f6"
+                    }`,
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px"
+          }}>
+            <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Journey Status</span>
+            <strong style={{
+              fontSize: "1.1rem",
+              color: state.journey_status.includes("Waiting") ? "#facc15" :
+                     state.journey_status.includes("Returning") ? "#f472b6" :
+                     state.journey_status.includes("Landing") ? "#fb923c" :
+                     state.journey_status === "Completed" ? "#34d399" : "#60a5fa"
+            }}>{state.journey_status}</strong>
+          </div>
+        )}
+
         <div className="button-grid">
           <button className="btn safe" disabled={disabled} onClick={() => runService("/arm")}>Arm</button>
           <button className="btn primary" disabled={disabled} onClick={() => runService("/takeoff")}>Takeoff</button>

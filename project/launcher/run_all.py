@@ -197,7 +197,6 @@ def main():
     parser.add_argument("--install", action="store_true", help="run npm install and colcon build when needed")
     parser.add_argument("--gazebo", action="store_true", help="launch PX4 SITL + Gazebo immediately")
     parser.add_argument("--px4", action="store_true", help="launch PX4 SITL, MicroXRCEAgent, and Gazebo")
-    parser.add_argument("--auto-arm", action="store_true", help="otomatis force arm dan takeoff setelah PX4 siap")
     parser.add_argument("--no-db", action="store_true", help="jangan start MySQL dan jangan jalankan telemetry database logger")
     parser.add_argument("--skip-db-schema", action="store_true", help="jangan apply database/drone_schema.sql saat start")
     parser.add_argument("--no-db-logger", action="store_true", help="start MySQL tetapi jangan jalankan mysql_telemetry_logger")
@@ -347,16 +346,6 @@ def main():
             print("[launcher] Gazebo world:", args.px4_world)
         print("[launcher] press Ctrl+C to stop all processes")
 
-        if launch_px4 and args.auto_arm:
-            print("[launcher] --auto-arm aktif: menunggu 25 detik lalu force arm + takeoff...")
-            time.sleep(25.0)
-            print("[launcher] mengirim force arm & takeoff ke dashboard bridge...")
-            subprocess.Popen(
-                ros_command("ros2 service call /force_arm_takeoff std_srvs/srv/Trigger {}"),
-                shell=True,
-                executable="/bin/bash",
-            )
-            print("[launcher] force arm & takeoff terkirim.")
 
         while True:
             time.sleep(1.0)

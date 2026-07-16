@@ -271,6 +271,8 @@ function drawPathsJson(ctx, transform, pathsJson) {
   drawPath(pathsJson.local, "#f59e0b", [6, 4], 2);  // Amber for Local RRT
   drawPath(pathsJson.final, "#0ea5e9", [6, 4], 2);  // Dashed Cyan for Final (thinner)
   drawPath(pathsJson.orbit, "#10b981", [4, 2], 2);  // Emerald green for Orbit
+  drawPath(pathsJson.outbound, "#3b82f6", null, 3); // Solid Blue for Outbound
+  drawPath(pathsJson.return, "#ec4899", null, 3);   // Solid Pink/Magenta for Return
 }
 
 function drawObstacles(ctx, transform, obstacles) {

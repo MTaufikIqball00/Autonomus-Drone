@@ -96,7 +96,11 @@ export async function PATCH(request) {
         status = COALESCE(?, status),
         end_time = COALESCE(?, end_time),
         total_distance_m = COALESCE(?, total_distance_m),
-        battery_used_percent = COALESCE(?, battery_used_percent)
+        battery_used_percent = COALESCE(?, battery_used_percent),
+        arrival_time = COALESCE(?, arrival_time),
+        rth_start_time = COALESCE(?, rth_start_time),
+        landing_time = COALESCE(?, landing_time),
+        total_duration_sec = COALESCE(?, total_duration_sec)
       WHERE id = ?
     `,
     [
@@ -104,6 +108,10 @@ export async function PATCH(request) {
       formatSqlDate(body.endedAt || body.ended_at || body.end_time) || null,
       body.distanceM ?? body.distance_m ?? body.total_distance_m ?? null,
       body.batteryUsedPercent ?? body.battery_used_percent ?? null,
+      formatSqlDate(body.arrivalTime || body.arrival_time) || null,
+      formatSqlDate(body.rthStartTime || body.rth_start_time) || null,
+      formatSqlDate(body.landingTime || body.landing_time) || null,
+      body.totalDurationSec ?? body.total_duration_sec ?? null,
       missionId,
     ],
   );

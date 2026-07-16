@@ -65,6 +65,10 @@ CREATE TABLE IF NOT EXISTS missions (
     total_distance_m FLOAT DEFAULT 0.0,
     battery_used_percent FLOAT DEFAULT 0.0,
     status ENUM('planned', 'in_progress', 'completed', 'failed', 'aborted') DEFAULT 'in_progress',
+    arrival_time TIMESTAMP NULL,
+    rth_start_time TIMESTAMP NULL,
+    landing_time TIMESTAMP NULL,
+    total_duration_sec INT DEFAULT 0,
     FOREIGN KEY (drone_id) REFERENCES drones(id) ON DELETE CASCADE,
     FOREIGN KEY (operator_id) REFERENCES users(id) ON DELETE SET NULL
 );

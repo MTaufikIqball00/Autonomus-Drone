@@ -194,6 +194,7 @@ class MySqlTelemetryLogger(Node):
         self.create_subscription(String, "/dashboard/state", self.state_cb, 20, callback_group=self.fast_cb_group)
         self.create_subscription(String, "/dashboard/obstacles", self.obstacles_cb, 10, callback_group=self.fast_cb_group)
         self.create_subscription(String, "/dashboard/metrics", self.metrics_cb, 10, callback_group=self.fast_cb_group)
+        self.create_subscription(String, "/dashboard/active_mission", self.active_mission_cb, 10, callback_group=self.fast_cb_group)
 
         flush_period = max(0.2, float(self.get_parameter("flush_period_sec").value))
         self.create_timer(flush_period, self.flush_tick, callback_group=self.db_cb_group)
@@ -415,6 +416,12 @@ class MySqlTelemetryLogger(Node):
     def flush_tick(self) -> None:
         batch_size = max(1, int(self.get_parameter("batch_size").value))
         self.writer.flush(batch_size)
+
+    def active_mission_cb(self, msg: String) -> None:
+        payload = parse_json(msg.data, {})
+        if isinstance(payload, dict) and "mission_id" in payload:
+            self.mission_id = int(payload["mission_id"])
+            self.get_logger().info(f"MySQL logger: Active mission ID updated dynamically to {self.mission_id}")
 
     def destroy_node(self) -> bool:
         self.writer.flush(max(1, int(self.get_parameter("batch_size").value)))

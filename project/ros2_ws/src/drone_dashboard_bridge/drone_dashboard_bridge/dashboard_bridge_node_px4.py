@@ -11,9 +11,16 @@ from typing import Dict, Iterable, List, Optional, Tuple
 import rclpy
 from geometry_msgs.msg import Point, PoseStamped, Quaternion, Twist
 from nav_msgs.msg import Odometry, Path
-from mavros_msgs.msg import State
-from mavros_msgs.srv import CommandBool, SetMode, CommandTOL
-from sensor_msgs.msg import BatteryState
+from px4_msgs.msg import (
+    BatteryStatus,
+    OffboardControlMode,
+    TrajectorySetpoint,
+    VehicleCommand,
+    VehicleLocalPosition,
+    VehicleOdometry,
+    VehicleStatus,
+    Wind,
+)
 from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 from rclpy.node import Node
@@ -27,6 +34,13 @@ from rclpy.qos import (
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
 from std_srvs.srv import Trigger
+
+PX4_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.BEST_EFFORT,
+    durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=1,
+)
 
 WORLD = {"x_min": -190.0, "x_max": 370.0, "y_min": -220.0, "y_max": 160.0}
 
@@ -193,9 +207,9 @@ class DashboardBridgeNode(Node):
         self.wind: Dict[str, float] = {"speed": 0.0, "north": 0.0, "east": 0.0}
         self.nearest_obstacle_m: Optional[float] = None
         self.scan_sample: List[float] = []
-        self.mission_start_time = None
+        self.mission_start_time: Optional[float] = None
         self.mission_distance_m = 0.0
-        self.mission_start_battery = None
+        self.mission_start_battery: Optional[float] = None
         self.rtl_triggered = False
         self._auto_takeoff_pending = False
         self._auto_takeoff_time = 0.0
@@ -209,28 +223,14 @@ class DashboardBridgeNode(Node):
         self.sp_y = None
         self.sp_z = None
 
-        # === AUTOMATIC RTH STATE VARIABLES ===
-        self.journey_status = "Idle"
-        self.home_pose_saved = False
-        self.outbound_path: List[Pose2D] = []
-        self.return_path: List[Pose2D] = []
-        self.rth_wait_start_time: Optional[float] = None
-        self.is_rth_waiting = False
-        self.departure_time_str = None
-        self.arrival_time_str = None
-        self.rth_start_time_str = None
-        self.landing_time_str = None
-        self.battery_used_percent = 0.0
-        self.total_duration_sec = 0
-        self.current_mission_id = 0
-
         self.create_subscription(Twist, "/cmd_vel", self.cmd_vel_cb, 10, callback_group=self.control_cb_group)
         self.create_subscription(PoseStamped, "/dashboard/goal_pose", self.goal_cb, 10, callback_group=self.planner_cb_group)
         self.create_subscription(LaserScan, "/drone/lidar/scan", self.lidar_cb, qos_profile_sensor_data, callback_group=self.sensor_cb_group)
-        self.create_subscription(PoseStamped, "/mavros/local_position/pose", self.local_pose_cb, 10, callback_group=self.control_cb_group)
-        self.create_subscription(BatteryState, "/mavros/battery", self.battery_cb, 10, callback_group=self.sensor_cb_group)
-        self.create_subscription(State, "/mavros/state", self.vehicle_state_cb, 10, callback_group=self.sensor_cb_group)
-        self.create_subscription(String, "/dashboard/active_mission", self.active_mission_cb, 10, callback_group=self.sensor_cb_group)
+        self.create_subscription(VehicleOdometry, "/fmu/out/vehicle_odometry", self.vehicle_odom_cb, PX4_QOS, callback_group=self.control_cb_group)
+        self.create_subscription(VehicleLocalPosition, "/fmu/out/vehicle_local_position", self.vehicle_local_position_cb, PX4_QOS, callback_group=self.control_cb_group)
+        self.create_subscription(BatteryStatus, "/fmu/out/battery_status", self.battery_cb, PX4_QOS, callback_group=self.sensor_cb_group)
+        self.create_subscription(VehicleStatus, "/fmu/out/vehicle_status", self.vehicle_status_cb, PX4_QOS, callback_group=self.sensor_cb_group)
+        self.create_subscription(Wind, "/fmu/out/wind", self.wind_cb, PX4_QOS, callback_group=self.sensor_cb_group)
 
         self.odom_pub = self.create_publisher(Odometry, "/odom", 10)
         self.state_pub = self.create_publisher(String, "/dashboard/state", 10)
@@ -243,14 +243,9 @@ class DashboardBridgeNode(Node):
         self.global_path = []
         self.local_path = []
         self.final_path = []
-        self.trajectory_pub = self.create_publisher(PoseStamped, "/mavros/setpoint_position/local", 10)
-        self.velocity_pub = self.create_publisher(Twist, "/mavros/setpoint_velocity/cmd_vel", 10)
-
-        # MAVROS Service Clients
-        self.arming_client = self.create_client(CommandBool, "/mavros/cmd/arming")
-        self.set_mode_client = self.create_client(SetMode, "/mavros/set_mode")
-        self.takeoff_client = self.create_client(CommandTOL, "/mavros/cmd/takeoff")
-        self.land_client = self.create_client(CommandTOL, "/mavros/cmd/land")
+        self.offboard_pub = self.create_publisher(OffboardControlMode, "/fmu/in/offboard_control_mode", 10)
+        self.trajectory_pub = self.create_publisher(TrajectorySetpoint, "/fmu/in/trajectory_setpoint", 10)
+        self.vehicle_command_pub = self.create_publisher(VehicleCommand, "/fmu/in/vehicle_command", 10)
 
         self.create_service(Trigger, "/start_gazebo", self.start_gazebo_cb, callback_group=self.planner_cb_group)
         self.create_service(Trigger, "/arm", self.arm_cb, callback_group=self.planner_cb_group)
@@ -264,7 +259,7 @@ class DashboardBridgeNode(Node):
 
         self.create_timer(self.setpoint_period, self.control_tick, callback_group=self.control_cb_group)
         self.create_timer(0.5, self.publish_dashboard_state, callback_group=self.sensor_cb_group)
-        self.get_logger().info("ArduPilot MAVROS dashboard bridge ready. MultiThreadedExecutor Aktif.")
+        self.get_logger().info("PX4 dashboard bridge ready. MultiThreadedExecutor Aktif.")
 
     def now_us(self) -> int: return int(self.get_clock().now().nanoseconds / 1000)
 
@@ -275,10 +270,11 @@ class DashboardBridgeNode(Node):
             self.mode = "manual"
             self.offboard_requested = True
             
+            # Auto-arm if manual UP (z > 0.1) is received and drone is currently disarmed
             is_armed = self.vehicle_status.get("armed", False)
             if msg.linear.z > 0.1 and not is_armed:
                 self.get_logger().info("Manual UP detected while disarmed: Auto-arming drone...")
-                self.call_arm(True)
+                self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM))
 
     def goal_cb(self, msg: PoseStamped) -> None:
         if self.current_pose is None:
@@ -295,7 +291,6 @@ class DashboardBridgeNode(Node):
         self.obstacles = [obs for obs in self.obstacles if obs["source"] == "gazebo_sdf"]
         for obs in self.obstacles: obs["active"] = False
 
-        from datetime import datetime
         goal = Pose2D(x=float(msg.pose.position.x), y=float(msg.pose.position.y), z=float(msg.pose.position.z) or self.current_pose.z, yaw=self.current_pose.yaw)
         self.last_goal = goal
         start = self.current_pose
@@ -311,18 +306,9 @@ class DashboardBridgeNode(Node):
             with self._path_lock:
                 self.path = fut.result()
                 self.path_index = 0
-                self.outbound_path = list(self.path)
-                self.return_path = []
             self.offboard_requested = True
             self.mission_start_time = time.monotonic()
             self.mission_distance_m = 0.0
-            self.departure_time_str = datetime.now().isoformat()
-            self.arrival_time_str = None
-            self.rth_start_time_str = None
-            self.landing_time_str = None
-            self.battery_used_percent = 0.0
-            self.total_duration_sec = 0
-            self.journey_status = "Navigating to Target"
             self.publish_path()
             self.get_logger().info("Global Path selesai dihitung.")
             self.publish_status("auto", "Path siap, memulai navigasi.")
@@ -357,8 +343,6 @@ class DashboardBridgeNode(Node):
 
         self.path = survey_wps
         self.path_index = 0
-        self.outbound_path = list(self.path)
-        self.return_path = []
         self.survey_active = True
         self.offboard_requested = True
         self.last_goal = self.path[-1]
@@ -372,55 +356,39 @@ class DashboardBridgeNode(Node):
         self.publish_status("survey_ready", response.message)
         return response
 
-    def local_pose_cb(self, msg: PoseStamped) -> None:
-        q = msg.pose.orientation
-        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
-        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-        yaw_enu = math.atan2(siny_cosp, cosy_cosp)
-        
-        pose = Pose2D()
-        pose.x = float(msg.pose.position.x) + self.spawn_x
-        pose.y = float(msg.pose.position.y) + self.spawn_y
-        pose.z = float(msg.pose.position.z)
-        pose.yaw = yaw_enu
+    def vehicle_odom_cb(self, msg: VehicleOdometry) -> None:
+        if len(msg.position) < 3: return
+        # FIX BUG #4: Ekstrak yaw langsung dari quaternion NED (msg.q = [w,x,y,z])
+        # alih-alih mempertahankan yaw lama. Sebelumnya, yaw bergantung pada urutan
+        # kedatangan pesan vs vehicle_local_position_cb -> jitter yaw saat interleaving.
+        if len(msg.q) >= 4 and math.isfinite(msg.q[0]):
+            qw, qx, qy, qz = float(msg.q[0]), float(msg.q[1]), float(msg.q[2]), float(msg.q[3])
+            yaw_ned = math.atan2(2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz))
+            yaw_enu = math.pi / 2.0 - yaw_ned
+        else:
+            yaw_enu = self.current_pose.yaw if self.current_pose else 0.0
+        pose = self.ned_to_enu_pose(north=float(msg.position[0]), east=float(msg.position[1]), down=float(msg.position[2]), yaw=yaw_enu)
+        pose.x += self.spawn_x; pose.y += self.spawn_y
         self.set_current_pose(pose)
 
-    def battery_cb(self, msg: BatteryState) -> None:
-        remaining = float(msg.percentage) if msg.percentage >= 0.0 else None
-        self.battery = {
-            "connected": True,
-            "remaining": remaining,
-            "voltage": float(msg.voltage),
-            "current": float(msg.current) if math.isfinite(msg.current) else 0.0,
-            "timeRemaining": None,
-            "warning": 0
-        }
-        if remaining is not None and remaining <= self.low_battery_threshold and not self.rtl_triggered:
-            self.trigger_return_home("battery_low")
+    def vehicle_local_position_cb(self, msg: VehicleLocalPosition) -> None:
+        if not (msg.xy_valid and msg.z_valid): return
+        pose = self.ned_to_enu_pose(north=float(msg.x), east=float(msg.y), down=float(msg.z), yaw=math.pi / 2.0 - float(msg.heading))
+        pose.x += self.spawn_x; pose.y += self.spawn_y
+        self.set_current_pose(pose)
 
-    def vehicle_state_cb(self, msg: State) -> None:
-        was_armed = self.vehicle_status.get("armed", False)
-        self.vehicle_status = {
-            "armed": bool(msg.armed),
-            "navState": 14 if msg.mode == "GUIDED" else 0,
-            "navStateName": str(msg.mode),
-            "failsafe": False,
-            "acceptsOffboard": bool(msg.guided)
-        }
-        if was_armed and not msg.armed and self.journey_status == "Landing":
-            from datetime import datetime
-            self.journey_status = "Completed"
-            self.mode = "hold"
-            self.landing_time_str = datetime.now().isoformat()
-            if self.mission_start_time is not None:
-                self.total_duration_sec = int(time.monotonic() - self.mission_start_time)
-            else:
-                self.total_duration_sec = 0
-            if self.mission_start_battery is not None and self.battery.get("remaining") is not None:
-                self.battery_used_percent = float(self.mission_start_battery - self.battery.get("remaining")) * 100.0
-            else:
-                self.battery_used_percent = 0.0
-            self.publish_status("mission_completed_db", f"Misi selesai! Durasi: {self.total_duration_sec}s, Jarak: {self.mission_distance_m:.1f}m, Baterai terpakai: {self.battery_used_percent:.1f}%")
+    def battery_cb(self, msg: BatteryStatus) -> None:
+        remaining = float(msg.remaining) if msg.remaining >= 0.0 else None
+        self.battery = {"connected": bool(msg.connected), "remaining": remaining, "voltage": float(msg.voltage_v), "current": float(msg.current_a), "timeRemaining": float(msg.time_remaining_s) if math.isfinite(msg.time_remaining_s) else None, "warning": int(msg.warning)}
+        if remaining is not None and remaining <= self.low_battery_threshold and not self.rtl_triggered: self.trigger_return_home("battery_low")
+
+    def vehicle_status_cb(self, msg: VehicleStatus) -> None:
+        self.vehicle_status = {"armed": int(msg.arming_state) == int(VehicleStatus.ARMING_STATE_ARMED), "navState": int(msg.nav_state), "navStateName": self.nav_state_name(int(msg.nav_state)), "failsafe": bool(msg.failsafe), "acceptsOffboard": bool(msg.accepts_offboard_setpoints)}
+
+    def wind_cb(self, msg: Wind) -> None:
+        speed = math.hypot(float(msg.windspeed_north), float(msg.windspeed_east))
+        self.wind = {"north": float(msg.windspeed_north), "east": float(msg.windspeed_east), "speed": speed}
+        if speed >= self.wind_abort_threshold and not self.rtl_triggered: self.trigger_return_home("wind_abort")
 
     def lidar_cb(self, msg: LaserScan) -> None:
         valid_ranges = []
@@ -493,11 +461,6 @@ class DashboardBridgeNode(Node):
     def set_current_pose(self, pose: Pose2D) -> None:
         self._last_pose_time = time.monotonic()
         if self.home_pose is None: self.home_pose = Pose2D(pose.x, pose.y, pose.z, pose.yaw)
-        if self.vehicle_status.get("armed", False) and pose.z > 0.3:
-            if not self.home_pose_saved:
-                self.home_pose = Pose2D(pose.x, pose.y, pose.z, pose.yaw)
-                self.home_pose_saved = True
-                self.get_logger().info(f"Home pose recorded at takeoff: {self.home_pose.x:.2f}, {self.home_pose.y:.2f}, {self.home_pose.z:.2f}")
         if self.current_pose is not None and self.mission_start_time is not None:
             self.mission_distance_m += self.distance_xy(self.current_pose, pose)
         self.current_pose = pose
@@ -529,26 +492,25 @@ class DashboardBridgeNode(Node):
         elif self.mode == "manual":
             self.total_manual_time += dt
 
+        self.publish_offboard_control_mode()
         if self.current_pose is None: return
         if self.mode == "idle": self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
 
-        # Hover wait timer checking before proceeding with auto navigation
-        if self.is_rth_waiting and self.rth_wait_start_time is not None:
-            if time.monotonic() - self.rth_wait_start_time >= 5.0:
-                self.is_rth_waiting = False
-                self.rth_wait_start_time = None
-                self.start_automatic_rth()
-
         if self._auto_takeoff_pending and time.monotonic() >= self._auto_takeoff_time:
             self._auto_takeoff_pending = False
-            self.mode = "takeoff"
-            self._takeoff_triggered = False
+            target = Pose2D(self.current_pose.x, self.current_pose.y, self.takeoff_altitude, self.current_pose.yaw)
+            self.path = [target]
+            self.path_index = 0
+            self.mode = "takeoff_spinup"
+            self._takeoff_spinup_start = time.monotonic()
+            self.sp_x = None
+            self.sp_y = None
+            self.sp_z = None
             self.survey_active = False
-            self.publish_status("auto_takeoff", "Takeoff otomatis dimulai...")
+            self.offboard_requested = True
+            self.publish_status("auto_takeoff", f"Takeoff otomatis dimulai. Menyalakan mesin (spin-up) selama 1.8 detik...")
 
         if self.mode in ("auto", "return_home"): 
-            self.follow_path_tick()
-        elif self.mode == "grid_patrol": # fallback
             self.follow_path_tick()
         elif self.mode == "orbit":
             self.orbit_tick()
@@ -557,52 +519,38 @@ class DashboardBridgeNode(Node):
         elif self.mode == "survey_countdown":
             self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
             if time.monotonic() >= self._survey_start_time:
-                from datetime import datetime
                 self.mode = "auto"
                 self.mission_start_time = time.monotonic()
                 self.mission_distance_m = 0.0
                 self.mission_start_battery = self.battery.get("remaining")
                 self.rtl_triggered = False
-                self.departure_time_str = datetime.now().isoformat()
-                self.arrival_time_str = None
-                self.rth_start_time_str = None
-                self.landing_time_str = None
-                self.battery_used_percent = 0.0
-                self.total_duration_sec = 0
-                self.journey_status = "Navigating to Target"
                 self.publish_status("mission_started", "Waktu tunggu selesai. Misi survey dimulai!")
                 
-        elif self.mode == "takeoff":
-            is_armed = self.vehicle_status.get("armed", False)
-            is_guided = self.vehicle_status.get("navStateName") == "GUIDED"
+        elif self.mode == "takeoff_spinup":
+            if self.current_pose is not None:
+                target = Pose2D(self.current_pose.x, self.current_pose.y, self.current_pose.z, self.current_pose.yaw)
+                self.publish_position_setpoint(target, current_cruise_speed=1.5)
             
-            if not is_guided:
-                self.call_set_mode("GUIDED")
-            elif not is_armed:
-                self.call_arm(True)
-            else:
-                if not getattr(self, "_takeoff_triggered", False):
-                    self.call_takeoff(self.takeoff_altitude)
-                    self._takeoff_triggered = True
-                    self.publish_status("takeoff_climb", f"Takeoff dipicu menuju {self.takeoff_altitude}m.")
-            
-            if self.current_pose.z >= self.takeoff_altitude - 0.5:
-                self.mode = "hold"
-                self._takeoff_triggered = False
+            if time.monotonic() - self._takeoff_spinup_start >= 1.8:
+                self.mode = "takeoff"
                 self.sp_x = self.current_pose.x
                 self.sp_y = self.current_pose.y
                 self.sp_z = self.current_pose.z
-                self.publish_status("takeoff_complete", "Takeoff selesai. Hovering.")
+                self.publish_status("takeoff_climb", f"Mesin siap. Terbang vertikal ke {self.takeoff_altitude}m.")
 
-        elif self.mode == "hold":
+        elif self.mode in ("takeoff", "hold"):
             if self.path and 0 <= self.path_index < len(self.path):
+                if self.mode == "takeoff" and self.current_pose is not None and not self.vehicle_status.get("armed", False):
+                    self.path[self.path_index].x = self.current_pose.x
+                    self.path[self.path_index].y = self.current_pose.y
+                    self.path[self.path_index].yaw = self.current_pose.yaw
                 target = self.path[self.path_index]
             else:
                 target = self.current_pose
             self.publish_position_setpoint(target, current_cruise_speed=1.5)
 
-        if self.offboard_requested or (self.mode in ("manual", "takeoff") and self.vehicle_status.get("navStateName") != "GUIDED"):
-            self.call_set_mode("GUIDED")
+        if self.offboard_requested or (self.mode in ("manual", "takeoff", "takeoff_spinup") and self.vehicle_status.get("navState") != 14):
+            self.request_offboard_mode()
             self.offboard_requested = False
 
     def manual_tick(self) -> None:
@@ -674,36 +622,13 @@ class DashboardBridgeNode(Node):
                 break
                 
         if self.path_index >= len(self.path) - 1 and self.distance_xy(self.current_pose, target) <= self.goal_acceptance_radius:
-            from datetime import datetime
-            if self.mode == "auto" and self.journey_status == "Navigating to Target":
-                self.mode = "hold"
-                self.path = []
-                self.sp_x = None
-                self.survey_active = False
-                self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
-                self.journey_status = "Mission Completed - Waiting 5 Seconds"
-                self.arrival_time_str = datetime.now().isoformat()
-                self.is_rth_waiting = True
-                self.rth_wait_start_time = time.monotonic()
-                self.publish_status("mission_wait_5s", "Misi selesai. Menunggu 5 detik (hover) sebelum Return to Home otomatis...")
-                return
-            elif self.mode == "return_home" and self.journey_status == "Returning to Home":
-                self.mode = "land"
-                self.path = []
-                self.sp_x = None
-                self.journey_status = "Landing"
-                self.landing_time_str = None
-                self.call_set_mode("LAND")
-                self.publish_status("landing_rth", "Tiba di Home. Memulai pendaratan otomatis secara halus...")
-                return
-            else:
-                self.mode = "hold"
-                self.path = []
-                self.sp_x = None
-                self.survey_active = False
-                self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
-                self.publish_status("mission_complete", "Misi selesai. Holding position.")
-                return
+            self.mode = "hold"
+            self.path = []
+            self.sp_x = None
+            self.survey_active = False
+            self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
+            self.publish_status("mission_complete", "Misi survey otonom selesai. Holding position.")
+            return
             
         # Calculate target speed based on upcoming corner (Macro Lookahead Deceleration)
         target_speed = self.cruise_speed
@@ -752,34 +677,6 @@ class DashboardBridgeNode(Node):
         msg.acceleration = False; msg.attitude = False; msg.body_rate = False; msg.thrust_and_torque = False; msg.direct_actuator = False
         self.offboard_pub.publish(msg)
 
-    def call_arm(self, arm: bool) -> None:
-        if not self.arming_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().error("Arming service not available!")
-            return
-        req = CommandBool.Request()
-        req.value = arm
-        self.arming_client.call_async(req)
-
-    def call_set_mode(self, mode: str) -> None:
-        if not self.set_mode_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().error("SetMode service not available!")
-            return
-        req = SetMode.Request()
-        req.custom_mode = mode
-        self.set_mode_client.call_async(req)
-
-    def call_takeoff(self, altitude: float) -> None:
-        if not self.takeoff_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().error("Takeoff service not available!")
-            return
-        req = CommandTOL.Request()
-        req.altitude = altitude
-        req.latitude = 0.0
-        req.longitude = 0.0
-        req.min_pitch = 0.0
-        req.yaw = 0.0
-        self.takeoff_client.call_async(req)
-
     def publish_position_setpoint(self, pose: Pose2D, current_cruise_speed: float = None) -> None:
         if self.current_pose is None: return
         
@@ -826,59 +723,124 @@ class DashboardBridgeNode(Node):
         else:
             self.sp_z = pose.z
 
-        msg = PoseStamped()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = self.frame_id
+        msg = TrajectorySetpoint()
+        msg.timestamp = self.now_us()
+        local_x = self.sp_x - self.spawn_x; local_y = self.sp_y - self.spawn_y
+        msg.position = [float(local_y), float(local_x), float(-self.sp_z)]
         
-        msg.pose.position.x = float(self.sp_x - self.spawn_x)
-        msg.pose.position.y = float(self.sp_y - self.spawn_y)
-        msg.pose.position.z = float(self.sp_z)
-        
+        # Calculate velocity feedforward to prevent stop-and-go (bobbing)
+        if dist_sp > max_d_xy:
+            vel_x = (dx_sp / dist_sp) * current_cruise_speed
+            vel_y = (dy_sp / dist_sp) * current_cruise_speed
+        else:
+            vel_x = 0.0; vel_y = 0.0
+            
+        vel_z = 0.0
+        if abs(dz_sp) > 0.3:
+            ratio = min(1.0, abs(dz_sp) / 1.0)
+            vel_z = self.vertical_speed * ratio
+            
+        # Feedforward velocity (NED frame: Y is North, X is East, -Z is Down)
+        # During takeoff, set horizontal velocity feedforward to zero to prevent spikes
+        if self.mode == "takeoff":
+            msg.velocity = [0.0, 0.0, float(-math.copysign(vel_z, dz_sp))]
+        else:
+            msg.velocity = [float(vel_y), float(vel_x), float(-math.copysign(vel_z, dz_sp))]
+        msg.acceleration = [float("nan"), float("nan"), float("nan")]
+        msg.jerk = [float("nan"), float("nan"), float("nan")]
+        # Calculate yaw to face the target if we are moving
         dx_drone = pose.x - self.current_pose.x
         dy_drone = pose.y - self.current_pose.y
         dist_drone = math.hypot(dx_drone, dy_drone)
         
         if self.mode in ("auto", "return_home", "orbit") and dist_drone > 0.2:
             target_yaw_enu = math.atan2(dy_drone, dx_drone)
-            msg.pose.orientation = yaw_to_quaternion(target_yaw_enu)
+            yaw_ned = math.pi / 2.0 - target_yaw_enu
+            # Normalize yaw to [-pi, pi]
+            yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
+            msg.yaw = float(yaw_ned)
+        elif self.mode in ("takeoff", "hold"):
+            yaw_ned = math.pi / 2.0 - pose.yaw
+            # Normalize yaw to [-pi, pi]
+            yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
+            msg.yaw = float(yaw_ned)
         else:
-            msg.pose.orientation = yaw_to_quaternion(pose.yaw)
-            
+            msg.yaw = float("nan")
+        msg.yawspeed = float("nan")
         self.trajectory_pub.publish(msg)
 
     def publish_velocity_setpoint(self, cmd: Twist) -> None:
-        self.velocity_pub.publish(cmd)
+        yaw = self.current_pose.yaw if self.current_pose else 0.0
+        forward = clamp(float(cmd.linear.x), -1.0, 1.0) * self.manual_speed
+        left = clamp(float(cmd.linear.y), -1.0, 1.0) * self.manual_speed
+        up = clamp(float(cmd.linear.z), -1.0, 1.0) * self.vertical_speed
+        yaw_rate = clamp(float(cmd.angular.z), -1.0, 1.0) * self.yaw_rate
+        east = forward * math.cos(yaw) - left * math.sin(yaw)
+        north = forward * math.sin(yaw) + left * math.cos(yaw)
+        msg = TrajectorySetpoint()
+        msg.timestamp = self.now_us()
+        msg.position = [float("nan"), float("nan"), float("nan")]
+        msg.velocity = [float(north), float(east), float(-up)]
+        msg.acceleration = [float("nan"), float("nan"), float("nan")]
+        msg.jerk = [float("nan"), float("nan"), float("nan")]
+        msg.yaw = float("nan"); msg.yawspeed = float(-yaw_rate)
+        self.trajectory_pub.publish(msg)
+
+    def request_offboard_mode(self) -> None:
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, param1=1.0, param2=6.0)
+
+    def publish_vehicle_command(self, command: int, **params: float) -> None:
+        msg = VehicleCommand()
+        msg.timestamp = self.now_us()
+        msg.command = int(command)
+        msg.param1 = float(params.get("param1", 0.0)); msg.param2 = float(params.get("param2", 0.0))
+        msg.param3 = float(params.get("param3", 0.0)); msg.param4 = float(params.get("param4", 0.0))
+        msg.param5 = float(params.get("param5", 0.0)); msg.param6 = float(params.get("param6", 0.0))
+        msg.param7 = float(params.get("param7", 0.0))
+        msg.target_system = 1; msg.target_component = 1; msg.source_system = 1; msg.source_component = 1
+        msg.from_external = True
+        self.vehicle_command_pub.publish(msg)
 
     def force_arm_takeoff_cb(self, _request: Trigger.Request, response: Trigger.Response):
-        self.call_arm(True)
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM), param2=21196.0)
         self._auto_takeoff_pending = True
         self._auto_takeoff_time = time.monotonic() + 4.0
+        self.offboard_requested = True
         response.success = True; response.message = f"Force arm dikirim. Takeoff otomatis dalam 4 detik."
         self.publish_status("force_arm_takeoff", response.message)
         return response
 
     def start_gazebo_cb(self, _request: Trigger.Request, response: Trigger.Response):
-        response.success = True; response.message = "Gunakan simulation launcher. Node ini tidak membuat mock Gazebo."
+        response.success = True; response.message = "Gunakan launcher/run_all.py --px4 --gazebo. Node ini tidak membuat mock Gazebo."
         return response
 
     def arm_cb(self, _request: Trigger.Request, response: Trigger.Response):
-        self.call_arm(True)
-        response.success = True; response.message = "ArduPilot arm command dikirim."
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM))
+        response.success = True; response.message = "PX4 arm command dikirim."
         return response
 
     def takeoff_cb(self, _request: Trigger.Request, response: Trigger.Response):
         if self.current_pose is None:
-            response.success = False; response.message = "Tidak ada local position."
+            response.success = False; response.message = "Tidak ada PX4 local position."
             return response
-        self.mode = "takeoff"
-        self._takeoff_triggered = False
-        response.success = True; response.message = f"Takeoff otonom menuju {self.takeoff_altitude:.1f} m dimulai."
+        target = Pose2D(self.current_pose.x, self.current_pose.y, self.takeoff_altitude, self.current_pose.yaw)
+        self.path = [target]
+        self.path_index = 0
+        self.mode = "takeoff_spinup"
+        self._takeoff_spinup_start = time.monotonic()
+        self.survey_active = False
+        self.offboard_requested = True
+        self.sp_x = None
+        self.sp_y = None
+        self.sp_z = None
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=float(VehicleCommand.ARMING_ACTION_ARM))
+        response.success = True; response.message = f"Takeoff dimulai. Menyalakan mesin (spin-up) selama 1.8 detik..."
         return response
 
     def land_cb(self, _request: Trigger.Request, response: Trigger.Response):
         self.mode = "land"; self.survey_active = False
-        self.call_set_mode("LAND")
-        response.success = True; response.message = "ArduPilot LAND mode dikirim."
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+        response.success = True; response.message = "PX4 land command dikirim."
         return response
 
     def return_home_cb(self, _request: Trigger.Request, response: Trigger.Response):
@@ -887,12 +849,12 @@ class DashboardBridgeNode(Node):
         return response
 
     def emergency_stop_cb(self, _request: Trigger.Request, response: Trigger.Response):
-        self.mode = "hold"; self.path = []; self.sp_x = None; self.manual_cmd = Twist(); self.survey_active = False
+        self.mode = "hold"; self.path = []; self.sp_x = None; self.manual_cmd = Twist(); self.offboard_requested = True; self.survey_active = False
         self.survey_saved_path = []
         if self.current_pose: self.publish_position_setpoint(self.current_pose)
-        self.call_set_mode("LOITER")
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, param1=1.0, param2=4.0)
         self.publish_status("emergency_stop", "EMERGENCY STOP TRIGGERED. Drone ditahan (LOITER).")
-        response.success = True; response.message = "Emergency stop: Mode LOITER diaktifkan."
+        response.success = True; response.message = "Emergency stop: COMMAND MODE 4 (Loiter) + OFFBOARD Hold."
         return response
 
     def trigger_return_home(self, reason: str) -> None:
@@ -905,15 +867,17 @@ class DashboardBridgeNode(Node):
             
             def done_cb(fut):
                 if fut.cancelled(): return
+                # FIX BUG #3: atomic update path + path_index
                 with self._path_lock:
                     self.path = fut.result()
                     self.path_index = 0
+                self.offboard_requested = True
                 self.publish_path()
                 
             if self.planning_future and not self.planning_future.done(): self.planning_future.cancel()
             self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, high_home)
             self.planning_future.add_done_callback(done_cb)
-        self.call_set_mode("RTL")
+        self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH)
         self.publish_status("return_home", f"RTL dipicu: {reason}.")
 
     def replan_from_current(self, reason: str) -> None:
@@ -1611,8 +1575,6 @@ class DashboardBridgeNode(Node):
             "local": [{"x": p.x, "y": p.y, "z": p.z} for p in self.local_path],
             "final": [{"x": p.x, "y": p.y, "z": p.z} for p in self.path],
             "orbit": [{"x": p.x, "y": p.y, "z": p.z} for p in self.orbit_waypoints] if self.mode == "orbit" else [],
-            "outbound": [{"x": p.x, "y": p.y, "z": p.z} for p in self.outbound_path],
-            "return": [{"x": p.x, "y": p.y, "z": p.z} for p in self.return_path],
         }
         msg = String()
         msg.data = json.dumps(paths_dict)
@@ -1649,16 +1611,6 @@ class DashboardBridgeNode(Node):
             "nearestObstacle": self.nearest_obstacle_m, "rtlTriggered": self.rtl_triggered,
             "planner": {"algorithm": "Integrated Boustrophedon + Hybrid A* & RRT Detour", "resolution": self.planner_resolution},
             "orbit": orbit_info,
-            "journey_status": self.journey_status,
-            "rth_metadata": {
-                "departure_time": self.departure_time_str,
-                "arrival_time": self.arrival_time_str,
-                "rth_start_time": self.rth_start_time_str,
-                "landing_time": self.landing_time_str,
-                "total_distance_m": self.mission_distance_m,
-                "battery_used_percent": self.battery_used_percent,
-                "total_duration_sec": self.total_duration_sec,
-            }
         }
         self.state_pub.publish(String(data=json.dumps(payload)))
         self.obstacles_pub.publish(String(data=json.dumps(self.obstacles)))
@@ -1695,46 +1647,6 @@ class DashboardBridgeNode(Node):
     @staticmethod
     def distance_xy(a: Pose2D, b: Pose2D) -> float:
         return math.hypot(a.x - b.x, a.y - b.y)
-
-    def start_automatic_rth(self) -> None:
-        from datetime import datetime
-        if self.home_pose is None or self.current_pose is None:
-            self.get_logger().error("Automatic RTH failed: Home pose or current pose is None!")
-            return
-        self.get_logger().info("Hover wait complete. Starting automatic Return To Home...")
-        self.journey_status = "Returning to Home"
-        self.rth_start_time_str = datetime.now().isoformat()
-        self.mode = "return_home"
-        
-        # Calculate return path back to home at a safe altitude
-        safe_altitude = max(self.current_pose.z, 6.0)
-        high_home = Pose2D(self.home_pose.x, self.home_pose.y, safe_altitude, self.home_pose.yaw)
-        
-        self.path = []
-        
-        def done_cb(fut):
-            if fut.cancelled(): return
-            with self._path_lock:
-                self.path = fut.result()
-                self.return_path = list(self.path)
-                self.path_index = 0
-            self.publish_path()
-            self.publish_status("rth_path_ready", "Jalur RTH otonom berhasil dihitung.")
-            
-        if self.planning_future and not self.planning_future.done():
-            self.planning_future.cancel()
-            
-        self.planning_future = self.planning_executor.submit(self.plan_path, self.current_pose, high_home)
-        self.planning_future.add_done_callback(done_cb)
-
-    def active_mission_cb(self, msg: String) -> None:
-        try:
-            payload = json.loads(msg.data)
-            if isinstance(payload, dict) and "mission_id" in payload:
-                self.current_mission_id = int(payload["mission_id"])
-                self.get_logger().info(f"Bridge Node: Active mission ID updated to {self.current_mission_id}")
-        except Exception as e:
-            self.get_logger().error(f"Error parsing active mission ID: {e}")
 
     @staticmethod
     def nav_state_name(nav_state: int) -> str:
