@@ -23,6 +23,7 @@ setup(
     entry_points={
         "console_scripts": [
             "dashboard_bridge_node = drone_dashboard_bridge.dashboard_bridge_node:main",
+            "dashboard_bridge_node_px4 = drone_dashboard_bridge.dashboard_bridge_node_px4:main",
             "mysql_telemetry_logger = drone_dashboard_bridge.mysql_telemetry_logger:main",
             "field_patrol_mission = drone_dashboard_bridge.field_patrol_mission:main",
             "boustrophedon = drone_dashboard_bridge.boustrophedon:main",

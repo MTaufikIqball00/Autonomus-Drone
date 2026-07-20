@@ -1,14 +1,14 @@
 "use client";
 
 function fmt(value, digits = 1) {
-  return Number.isFinite(value) ? value.toFixed(digits) : "--";
+  return Number.isFinite(value) ? (digits === 0 ? Math.floor(value).toString() : value.toFixed(digits)) : "--";
 }
 
 const METRICS = [
-  { key: "autoTimeSec", label: "Auto Flight Time", unit: "s", max: 240 },
-  { key: "manualTimeSec", label: "Manual Flight Time", unit: "s", max: 240 },
-  { key: "autoBatteryUsed", label: "Auto Battery Usage", unit: "%", max: 0.3, scale: 100 },
-  { key: "manualBatteryUsed", label: "Manual Battery Usage", unit: "%", max: 0.3, scale: 100 }
+  { key: "autoTimeSec", label: "Auto Flight Time", unit: "s", max: 240, digits: 0 },
+  { key: "manualTimeSec", label: "Manual Flight Time", unit: "s", max: 240, digits: 0 },
+  { key: "autoBatteryUsed", label: "Auto Battery Usage", unit: "%", max: 0.3, scale: 100, digits: 1 },
+  { key: "manualBatteryUsed", label: "Manual Battery Usage", unit: "%", max: 0.3, scale: 100, digits: 1 }
 ];
 
 export default function MetricsChart({ metrics }) {
@@ -28,7 +28,7 @@ export default function MetricsChart({ metrics }) {
             <div className="chart-row" key={item.key}>
               <div className="chart-header">
                 <div className="chart-label">{item.label}</div>
-                <strong>{fmt(scaled)} {item.unit}</strong>
+                <strong>{fmt(scaled, item.digits ?? 1)} {item.unit}</strong>
               </div>
               <div className="chart-track">
                 <div className="chart-fill" style={{ width: `${width}%` }} />

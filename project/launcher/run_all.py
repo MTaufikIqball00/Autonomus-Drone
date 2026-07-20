@@ -309,10 +309,11 @@ def main():
         )
         time.sleep(1.5)
 
+        bridge_exec = "dashboard_bridge_node_px4" if launch_px4 else "dashboard_bridge_node"
         processes.append(
             run(
-                "dashboard_bridge_node",
-                ros_command("ros2 run drone_dashboard_bridge dashboard_bridge_node"),
+                bridge_exec,
+                ros_command(f"ros2 run drone_dashboard_bridge {bridge_exec}"),
                 cwd=ROS_WS,
             )
         )

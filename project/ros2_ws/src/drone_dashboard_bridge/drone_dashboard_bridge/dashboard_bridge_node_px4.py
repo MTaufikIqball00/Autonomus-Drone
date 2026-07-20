@@ -308,6 +308,7 @@ class DashboardBridgeNode(Node):
                 self.path_index = 0
             self.offboard_requested = True
             self.mission_start_time = time.monotonic()
+            self.total_auto_time = 0.0
             self.mission_distance_m = 0.0
             self.publish_path()
             self.get_logger().info("Global Path selesai dihitung.")
@@ -474,20 +475,22 @@ class DashboardBridgeNode(Node):
 
     def control_tick(self) -> None:
         now = time.monotonic()
-        dt = now - self.last_tick_time
+        raw_dt = now - self.last_tick_time
         self.last_tick_time = now
+        # Clamp dt to prevent huge time jumps (e.g. 10s -> 140s) during thread lag or long computations
+        dt = min(max(0.0, raw_dt), 0.2)
 
         current_battery = self.battery.get("remaining")
         if self.last_battery is not None and current_battery is not None:
             delta = self.last_battery - current_battery
             if delta > 0:
-                if self.mode in ("auto", "survey_countdown", "takeoff", "return_home"):
+                if self.mode in ("auto", "survey_countdown", "takeoff", "return_home", "rth_wait", "orbit"):
                     self.total_auto_battery += delta
                 elif self.mode == "manual":
                     self.total_manual_battery += delta
         self.last_battery = current_battery
 
-        if self.mode in ("auto", "return_home", "takeoff", "survey_countdown", "orbit"):
+        if self.mode in ("auto", "return_home", "takeoff", "survey_countdown", "orbit", "rth_wait"):
             self.total_auto_time += dt
         elif self.mode == "manual":
             self.total_manual_time += dt
@@ -538,9 +541,16 @@ class DashboardBridgeNode(Node):
                 self.sp_z = self.current_pose.z
                 self.publish_status("takeoff_climb", f"Mesin siap. Terbang vertikal ke {self.takeoff_altitude}m.")
 
+        elif self.mode == "rth_wait":
+            if self.current_pose is not None:
+                self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
+            if self.rth_wait_start_time is not None and (time.monotonic() - self.rth_wait_start_time >= 5.0):
+                self.publish_status("auto_rth", "Jeda 5 detik selesai. Memulai Return to Home (RTH)...")
+                self.trigger_return_home("auto_goal_complete")
+
         elif self.mode in ("takeoff", "hold"):
             if self.path and 0 <= self.path_index < len(self.path):
-                if self.mode == "takeoff" and self.current_pose is not None and not self.vehicle_status.get("armed", False):
+                if self.mode == "takeoff" and self.current_pose is not None:
                     self.path[self.path_index].x = self.current_pose.x
                     self.path[self.path_index].y = self.current_pose.y
                     self.path[self.path_index].yaw = self.current_pose.yaw
@@ -555,6 +565,12 @@ class DashboardBridgeNode(Node):
 
     def manual_tick(self) -> None:
         age = time.monotonic() - self.manual_cmd_time
+        if age >= 2.0 and self.mode == "manual":
+            self.mode = "hold"
+            self.sp_x = None
+            if self.current_pose:
+                self.publish_position_setpoint(self.current_pose)
+            return
         cmd = self.manual_cmd if age < 0.45 else Twist()
         self.publish_velocity_setpoint(cmd)
 
@@ -622,12 +638,24 @@ class DashboardBridgeNode(Node):
                 break
                 
         if self.path_index >= len(self.path) - 1 and self.distance_xy(self.current_pose, target) <= self.goal_acceptance_radius:
-            self.mode = "hold"
+            if self.mode == "return_home":
+                self.mode = "land"
+                self.path = []
+                self.last_goal = None
+                self.sp_x = None
+                self.survey_active = False
+                self.rth_wait_start_time = None
+                self.publish_vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+                self.publish_status("rth_complete", "Drone telah tiba di Home Position. Melakukan pendaratan (LAND)...")
+                return
+
+            self.mode = "rth_wait"
             self.path = []
             self.sp_x = None
             self.survey_active = False
+            self.rth_wait_start_time = time.monotonic()
             self.publish_position_setpoint(self.current_pose, current_cruise_speed=1.5)
-            self.publish_status("mission_complete", "Misi survey otonom selesai. Holding position.")
+            self.publish_status("goal_reached", "Misi selesai. Tiba di tujuan. Menunggu 5 detik sebelum Return to Home (RTH)...")
             return
             
         # Calculate target speed based on upcoming corner (Macro Lookahead Deceleration)
@@ -672,7 +700,7 @@ class DashboardBridgeNode(Node):
         # Tanpa ini, selama 1.8 detik spin-up PX4 menerima OffboardControlMode
         # dengan SEMUA field False bersamaan dengan permintaan masuk OFFBOARD,
         # menyebabkan drone bergoyang (wobble) sebelum naik vertikal.
-        msg.position = self.mode in ("auto", "takeoff", "takeoff_spinup", "return_home", "hold", "idle", "survey_countdown", "orbit")
+        msg.position = self.mode in ("auto", "takeoff", "takeoff_spinup", "return_home", "hold", "idle", "survey_countdown", "orbit", "rth_wait")
         msg.velocity = self.mode == "manual"
         msg.acceleration = False; msg.attitude = False; msg.body_rate = False; msg.thrust_and_torque = False; msg.direct_actuator = False
         self.offboard_pub.publish(msg)
@@ -759,7 +787,7 @@ class DashboardBridgeNode(Node):
             # Normalize yaw to [-pi, pi]
             yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
             msg.yaw = float(yaw_ned)
-        elif self.mode in ("takeoff", "hold"):
+        elif self.mode in ("takeoff", "takeoff_spinup", "hold", "idle", "rth_wait"):
             yaw_ned = math.pi / 2.0 - pose.yaw
             # Normalize yaw to [-pi, pi]
             yaw_ned = (yaw_ned + math.pi) % (2 * math.pi) - math.pi
@@ -1623,8 +1651,8 @@ class DashboardBridgeNode(Node):
     def metric_payload(self) -> Dict[str, object]:
         return {
             "mode": self.mode, 
-            "autoTimeSec": self.total_auto_time,
-            "manualTimeSec": self.total_manual_time,
+            "autoTimeSec": int(self.total_auto_time),
+            "manualTimeSec": int(self.total_manual_time),
             "autoBatteryUsed": self.total_auto_battery,
             "manualBatteryUsed": self.total_manual_battery
         }
